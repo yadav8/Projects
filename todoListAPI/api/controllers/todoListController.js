@@ -1,5 +1,9 @@
 'use strict';
 
+//Command to launch server
+//npm run start
+
+
 //Imports
 var path = require('path')
 var mongoose = require('mongoose'),

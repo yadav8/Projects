@@ -10,9 +10,13 @@ console.log('todo list RESTful API server started on: ' + port);
 */
 
 
+//Command to launch server
+//npm run start
+
+
 var express = require('express'),
   app = express(),
-  port = process.env.PORT || 3000,
+  port = process.env.PORT || 8080,
   mongoose = require('mongoose'),
   Task = require('./api/models/todoListModel'), //created model loading here
   bodyParser = require('body-parser');
