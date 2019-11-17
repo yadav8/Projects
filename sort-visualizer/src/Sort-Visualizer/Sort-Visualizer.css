@@ -1,0 +1,14 @@
+/*
+Calculate array width and indenting from browser window BOM?
+*/
+
+.ArrayContainer {
+  position: absolute;
+  left: 50px;
+  bottom: 20px;
+}
+
+.ArrayBar {
+  display: inline-block;
+  margin: 0 2px;
+}
