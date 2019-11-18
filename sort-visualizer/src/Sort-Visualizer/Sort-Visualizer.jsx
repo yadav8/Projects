@@ -1,9 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom'
-//import {getMergeSortAnimations} from '../sortingAlgorithms/sortingAlgorithms.js';
+//import ReactDOM from 'react-dom'
+
 import './Sort-Visualizer.css';
-import './../Sort-Algorithms/Sort-Algorithms.js';
-//import Math;
+import {bubbleSort} from '../Sort-Algorithms/Sort-Algorithms.js';
 
 // Change this value for the speed of the animations.
 //const ANIMATION_SPEED_MS = 1;
@@ -54,10 +53,12 @@ export default class SortVisualizer extends React.Component {
 
 	render() {
 		const {array} = this.state;
+		//let newArray = bubbleSort(array);
+		let newArray = array;
 
 	    return (
 	    	<div className = "ArrayContainer">
-	    	{array.map((value, idx) => (
+	    	{newArray.map((value, idx) => (
 				<ArrayBar value = {value} idx = {idx}/>
 		    ))}
 		    </div>
@@ -69,14 +70,19 @@ export default class SortVisualizer extends React.Component {
 class ArrayBar extends React.Component {
 	constructor(props) {
 		super(props);
+		
+		this.state = {
+			value: this.props.value,
+		};
+		
 	}
 
 	render() {
-		const value = this.props.value;
+		const value = this.state.value;
 		return (
 			<div
 				className = "ArrayBar"
-				key = {this.props.idx}
+				//key = {this.props.idx}
 				style = {{
 					backgroundColor: PRIMARY_COLOR,
 					width: ARRAY_BAR_WIDTH,
