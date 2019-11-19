@@ -10,7 +10,7 @@ import {bubbleSort} from '../Sort-Algorithms/Sort-Algorithms.js';
 // Change this value for the number of bars (value) in the array.
 const ARRAY_SIZE = 100;
 
-// Formula to keep all bars on one line. Improve this laater
+// Formula to keep all bars on one line. Improve this later
 const ARRAY_BAR_WIDTH = (1100) / ARRAY_SIZE
 
 //Change this for Array min value
@@ -36,11 +36,13 @@ export default class SortVisualizer extends React.Component {
   }
 
 
+  	//New array for every reload
 	componentDidMount() {
 		this.resetArray();
 	}
 
 
+	//Generates new array
 	resetArray() {
 		const array = [];
 		for (let i = 0; i < ARRAY_SIZE; i++) {
@@ -50,10 +52,10 @@ export default class SortVisualizer extends React.Component {
 		this.setState({array});
 	}
 
+	//Function call when Bubble Sort button is pressed
 	bubbleSortButtonPressed() {
-		let {array} = this.state;
-		bubbleSort(array);
-		this.setState({array});
+		const sortedArray = bubbleSort(this.state.array);
+		this.setState({sortedArray});
 	}
 
 	render() {
@@ -73,7 +75,8 @@ export default class SortVisualizer extends React.Component {
 	}
 }
 
-
+//This component stores the visual representation of each element in the ArrayContainer
+//Automatically updates with ArrayContainer
 class ArrayBar extends React.Component {
 	constructor(props) {
 		super(props);
