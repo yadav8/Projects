@@ -50,6 +50,11 @@ export default class SortVisualizer extends React.Component {
 		this.setState({array});
 	}
 
+	bubbleSortButtonPressed() {
+		let {array} = this.state;
+		bubbleSort(array);
+		this.setState({array});
+	}
 
 	render() {
 		const {array} = this.state;
@@ -58,9 +63,11 @@ export default class SortVisualizer extends React.Component {
 
 	    return (
 	    	<div className = "ArrayContainer">
-	    	{newArray.map((value, idx) => (
-				<ArrayBar value = {value} idx = {idx}/>
-		    ))}
+		    	{newArray.map((value, idx) => (
+					<ArrayBar value={value} idx={idx}/>
+			    ))}
+			    <button onClick={() => this.resetArray()}>Generate new array!</button>
+			    <button onClick={() => this.bubbleSortButtonPressed()}>Bubble Sort</button>
 		    </div>
 	    );
 	}
@@ -73,16 +80,36 @@ class ArrayBar extends React.Component {
 		
 		this.state = {
 			value: this.props.value,
+			idx: this.props.idx,
 		};
 		
 	}
 
+	/*
+	Discontinued future support
+
+	UNSAFE_componentWillReceiveProps(props) {
+		this.setState({value: this.props.value});
+	}
+	*/
+
+	//ArrayBars always change state syncronously with props changes from ArrayContainer
+	static getDerivedStateFromProps(props, state) {
+
+		state = {
+					value: props.value,
+					idx: props.idx,
+				};
+
+		return state;
+	}
+
 	render() {
-		const value = this.state.value;
+		const {value, idx} = this.state;
 		return (
 			<div
 				className = "ArrayBar"
-				//key = {this.props.idx}
+				key = {this.idx}
 				style = {{
 					backgroundColor: PRIMARY_COLOR,
 					width: ARRAY_BAR_WIDTH,
