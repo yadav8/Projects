@@ -1,5 +1,4 @@
 import React from 'react';
-//import ReactDOM from 'react-dom'
 
 import './Sort-Visualizer.css';
 import {bubbleSort} from '../Sort-Algorithms/Sort-Algorithms.js';
@@ -8,66 +7,94 @@ import {bubbleSort} from '../Sort-Algorithms/Sort-Algorithms.js';
 //const ANIMATION_SPEED_MS = 1;
 
 // Change this value for the number of bars (value) in the array.
-const ARRAY_SIZE = 100;
+const ARRAY_SIZE = 50;
 
-// Formula to keep all bars on one line. Improve this later
-const ARRAY_BAR_WIDTH = (1100) / ARRAY_SIZE
+// Resizes to fit browser window
+let arrayContainerWidth = window.innerWidth - 100;
 
-//Change this for Array min value
-const ARRAY_MIN = 1
+// Resizes ArrayBars to ArrayContainer
+let arrayBarWidth = ((window.innerWidth - 100) / (ARRAY_SIZE)) - 4;
 
-//Change this for Array max value
-const ARRAY_MAX = 700
+// Change this for Array min value
+const ARRAY_MIN = 1;
+
+// Change this for Array max value
+const ARRAY_MAX = 700;
 
 // This is the main color of the array bars.
-const PRIMARY_COLOR = 'pink';
+const PRIMARY_COLOR = ['pink']; //,'turquoise','red','green'];
 
 // This is the color of array bars that are being compared throughout the animations.
 //const SECONDARY_COLOR = 'red';
 
 
 export default class SortVisualizer extends React.Component {
-  constructor(props) {
-    super(props);
+	constructor(props) {
+		super(props);
 
-    this.state = {
-      array: [],
-    };
-  }
-
-
-  	//New array for every reload
-	componentDidMount() {
-		this.resetArray();
+		this.state = {
+		  array: [],
+		  color: null,
+		  width: arrayContainerWidth,
+		};
 	}
 
 
-	//Generates new array
+  	// New array for every reload
+	componentDidMount() {
+		this.resetArray();
+		window.addEventListener('resize', () => this.updateDimensions());
+	}
+
+
+	componentWillUnmount() {
+		window.removeEventListener('resize', () => this.updateDimensions());
+	}
+
+
+	// Generates new array
 	resetArray() {
 		const array = [];
 		for (let i = 0; i < ARRAY_SIZE; i++) {
 			array.push(randomIntFromInterval(ARRAY_MIN, ARRAY_MAX));
 		}
 
-		this.setState({array});
+		// Remove or modify for animations
+		const color = PRIMARY_COLOR[randomIntFromInterval(0,PRIMARY_COLOR.length-1)];
+		const width = arrayContainerWidth;
+
+		this.setState({array, color, width});
 	}
 
-	//Function call when Bubble Sort button is pressed
+	updateDimensions() {
+		arrayContainerWidth = window.innerWidth - 100;
+		arrayBarWidth = ((window.innerWidth - 100) / (ARRAY_SIZE)) - 4;
+		this.setState({width: arrayContainerWidth});
+	}
+
+
+	// Function call when Bubble Sort button is pressed
 	bubbleSortButtonPressed() {
 		const sortedArray = bubbleSort(this.state.array);
-		this.setState({sortedArray});
+		this.setState({array: sortedArray});
 	}
 
 	render() {
-		const {array} = this.state;
-		//let newArray = bubbleSort(array);
-		let newArray = array;
+		const array = this.state.array;
+		const color = this.state.color;
+		const width = this.state.width;
 
 	    return (
-	    	<div className = "ArrayContainer">
-		    	{newArray.map((value, idx) => (
-					<ArrayBar value={value} idx={idx}/>
+	    	<div className = "ArrayContainer" style={{width: width,}}>
+		    	{array.map((value, idx) => (
+					<ArrayBar
+						value={value}
+						idx={idx}
+						color={color}
+						width={arrayBarWidth}
+					/>
 			    ))}
+			    <br/>
 			    <button onClick={() => this.resetArray()}>Generate new array!</button>
 			    <button onClick={() => this.bubbleSortButtonPressed()}>Bubble Sort</button>
 		    </div>
@@ -75,8 +102,10 @@ export default class SortVisualizer extends React.Component {
 	}
 }
 
-//This component stores the visual representation of each element in the ArrayContainer
-//Automatically updates with ArrayContainer
+
+
+// This component stores the visual representation of each element in the ArrayContainer
+// Automatically updates with ArrayContainer
 class ArrayBar extends React.Component {
 	constructor(props) {
 		super(props);
@@ -84,49 +113,42 @@ class ArrayBar extends React.Component {
 		this.state = {
 			value: this.props.value,
 			idx: this.props.idx,
+			color: this.props.color,
+			width: this.props.width,
 		};
 		
 	}
 
-	/*
-	Discontinued future support
-
-	UNSAFE_componentWillReceiveProps(props) {
-		this.setState({value: this.props.value});
-	}
-	*/
-
-	//ArrayBars always change state syncronously with props changes from ArrayContainer
+	// ArrayBars always change state syncronously with props changes from ArrayContainer
 	static getDerivedStateFromProps(props, state) {
-
 		state = {
 					value: props.value,
 					idx: props.idx,
+					color: props.color,
+					width: props.width,
 				};
 
 		return state;
 	}
 
 	render() {
-		const {value, idx} = this.state;
+		const {value, idx, color, width} = this.state;
+
 		return (
 			<div
 				className = "ArrayBar"
-				key = {this.idx}
+				key = {idx}
 				style = {{
-					backgroundColor: PRIMARY_COLOR,
-					width: ARRAY_BAR_WIDTH,
+					backgroundColor: color,
+					width: width,
 		        	height: `${value}px`,
 
 				}}>
 			</div>
-
 		);
 	}
 }
 
-// From https://stackoverflow.com/questions/4959975/generate-random-number-between-two-numbers-in-javascript
-function randomIntFromInterval(min, max) {
-  // min and max included
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
+
+// // From https://stackoverflow.com/questions/4959975/generate-random-number-between-two-numbers-in-javascript
+const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);

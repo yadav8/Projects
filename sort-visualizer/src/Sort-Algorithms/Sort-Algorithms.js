@@ -1,3 +1,11 @@
+export function bubbleSortVisualizer (array) {
+	var animations = null;
+
+	return {array, animations};
+}
+
+
+
 export function bubbleSort (array) {
 	var length = array.length;
     //Number of passes
