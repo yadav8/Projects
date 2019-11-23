@@ -1,26 +1,30 @@
-export function bubbleSortVisualizer (array) {
-	var animations = null;
+export function getBubbleSortSequence (array) {
+	// sequence elements will be of the form: ["operation", idx1, idx2]
+	// where operation can be compare or swap
+	var sequence = [];
 
-	return {array, animations};
+	bubbleSort(array, sequence);
+
+	return sequence;
 }
 
 
 
-export function bubbleSort (array) {
+function bubbleSort (array, sequence) {
 	var length = array.length;
-    //Number of passes
+
     for (var i = 0; i < length; i++) { 
-        //Notice that j < (length - i)
         for (var j = 0; j < (length - i - 1); j++) { 
-            //Compare the adjacent positions
+        	sequence.push(["compare",j,j+1]);	// j and j+1 first get compared
+
             if(array[j] > array[j+1]) {
-                //Swap the numbers
-                var tmp = array[j];  //Temporary variable to hold the current number
-                array[j] = array[j+1]; //Replace current number with adjacent number
-                array[j+1] = tmp; //Replace adjacent number with current number
+            	sequence.push(["swap",j,j+1]); // inside the if block - j and j+1 are swapped
+
+                // Swap the numbers
+                var tmp = array[j];
+                array[j] = array[j+1];
+                array[j+1] = tmp;
             }
         }        
     }
-
-    return array;
 }

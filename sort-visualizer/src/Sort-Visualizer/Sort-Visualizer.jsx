@@ -1,13 +1,13 @@
 import React from 'react';
 
 import './Sort-Visualizer.css';
-import {bubbleSort} from '../Sort-Algorithms/Sort-Algorithms.js';
+import {getBubbleSortSequence} from '../Sort-Algorithms/Sort-Algorithms.js';
 
 // Change this value for the speed of the animations.
 //const ANIMATION_SPEED_MS = 1;
 
 // Change this value for the number of bars (value) in the array.
-const ARRAY_SIZE = 50;
+const ARRAY_SIZE = 5;
 
 // Resizes to fit browser window
 let arrayContainerWidth = window.innerWidth - 100;
@@ -75,8 +75,16 @@ export default class SortVisualizer extends React.Component {
 
 	// Function call when Bubble Sort button is pressed
 	bubbleSortButtonPressed() {
-		const sortedArray = bubbleSort(this.state.array);
-		this.setState({array: sortedArray});
+		const sequence = getBubbleSortSequence(this.state.array);
+		console.log(sequence);
+		const arrayBars = document.getElementsByClassName('ArrayBar');
+		for (let i = 0; i < sequence.length; i++) {
+			let frame = sequence[i];
+			if (frame[0] == "compare") {
+				arrayBars[frame[1]].setState({color: 'red'});
+			}
+		}
+		this.setState({array: this.state.array});
 	}
 
 	render() {
