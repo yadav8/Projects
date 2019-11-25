@@ -1,3 +1,7 @@
+//COPIED FROM CLEMENT MIHAELESCU
+//https://github.com/clementmihailescu/Sorting-Visualizer-Tutorial/blob/master/src/sortingAlgorithms/sortingAlgorithms.js
+
+//MAKE IT WORK FOR OUR CODEBASE
 //RE-FACTOR AND RE-COMMENT THIS CODE
 
 export default function getMergeSortSequence(array) {
