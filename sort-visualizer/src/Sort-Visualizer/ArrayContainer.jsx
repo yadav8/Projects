@@ -5,12 +5,13 @@ import './Sort-Visualizer.css';
 import ArrayBar from './ArrayBar.jsx';
 import getBubbleSortSequence from '../Sort-Algorithms/BubbleSort.js';
 import getMergeSortSequence from '../Sort-Algorithms/MergeSort.js';
+import getQuickSortSequence from '../Sort-Algorithms/QuickSort.js';
 
 // Change this value for the number of bars (value) in the array.
-const ARRAY_SIZE = 20;
+const ARRAY_SIZE = 200;
 
 // Change this value for the speed of the animations.
-const ANIMATION_SPEED_MS = 50; //ARRAY_SIZE/7;
+const ANIMATION_SPEED_MS = 20; //ARRAY_SIZE/10;
 
 // Resizes to fit browser window
 let arrayContainerWidth = window.innerWidth - 200;
@@ -37,7 +38,7 @@ const SWAP_COLOR = 'blueviolet';
 const FINAL_COLOR = 'yellowgreen';
 
 
-export default class SortVisualizer extends React.Component {
+export default class ArrayContainer extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -74,8 +75,8 @@ export default class SortVisualizer extends React.Component {
 
 	// Handles updating Component dimensions on window resize
 	handleResize() {
-		arrayContainerWidth = window.innerWidth - 100;
-		arrayBarWidth = ((window.innerWidth - 100) / (ARRAY_SIZE)) - 4;
+		arrayContainerWidth = window.innerWidth - 200;
+		arrayBarWidth = ((window.innerWidth - 200) / (ARRAY_SIZE)) - 2.5;
 		this.setState({width: arrayContainerWidth});
 	}
 
@@ -89,21 +90,32 @@ export default class SortVisualizer extends React.Component {
 		
 	}
 
-
 	// Function call when Merge Sort button is pressed
 	mergeSortButtonPressed() {
-		// Extract the actual array value from our 'array' to send to BubbleSort
-		console.log(this.state.array);
+		// Extract the actual array value from our 'array' to send to MergeSort
 		let value_array = this.state.array.map(arraybar => arraybar[0]);
 		const sequence = getMergeSortSequence(value_array);
-		console.log(sequence);
 		this.executeSequence(sequence);
 		
 	}
 
-	// Executes compare/swap sequence generated from Sorting
-	// RE-FACTOR AND RE-COMMENT THIS
-	// POSSIBLY EXTRACT OUTSIDE OF COMPONENT INTO A DIFFERENT FILE USING FUNCTIONAL SETSTATE
+	// Function call when Quick Sort button is pressed
+	// Need to get Pivot color and Final color working
+	quickSortButtonPressed() {
+		// Extract the actual array value from our 'array' to send to QuickSort
+		console.log(this.state.array);
+		let value_array = this.state.array.map(arraybar => arraybar[0]);
+		const sequence = getQuickSortSequence(value_array);
+		this.executeSequence(sequence);
+		
+	}
+
+	// Executes sequence generated from Sorting
+	// Possible sequence functions:-
+	// Bubble Sort: compare, swap, final
+	// Merge Sort: compare, overwrite, final
+	// Quick Sort: compare, swap, pivot, final
+	// Heap Sort: compare, swap, final
 	executeSequence(sequence) {
 		let array_copy = [...this.state.array];
 		for (let i = 0; i < sequence.length; i++) {
@@ -115,17 +127,17 @@ export default class SortVisualizer extends React.Component {
 			let array_j = frame[2];
 
 			// Checks whether next frame will have array bars returning to DEFAULT color
-			let revertToPrimary = checkPrimaryColorRevert(sequence, i);
+			let revertToDefault = checkDefaultColorRevert(sequence, i);
 
 			// Calls appropriate sequence function logic for the upcoming frame to be rendered
 			if (sequence_function === "compare") {
-				this.sequenceCompare(array_copy, array_i, array_j, i, revertToPrimary);
+				this.sequenceCompare(array_copy, array_i, array_j, i, revertToDefault);
 			}
 			else if (sequence_function === "swap") {		
-				this.sequenceSwap(array_copy, array_i, array_j, i, revertToPrimary);				
+				this.sequenceSwap(array_copy, array_i, array_j, i, revertToDefault);				
 			}
 			else if (sequence_function === "overwrite") {
-				this.sequenceOverwrite(array_copy, array_i, array_j, i, revertToPrimary);
+				this.sequenceOverwrite(array_copy, array_i, array_j, i, revertToDefault);
 			}
 			else if (sequence_function === "final") {
 				// Change the color property to FINAL when ArrayBar has reached its final position			
@@ -138,32 +150,32 @@ export default class SortVisualizer extends React.Component {
 		}
 	}
 
-	sequenceCompare(array, i, j, frameNumber, revertToPrimary) {
+	sequenceCompare(array, i, j, frameNumber, revertToDefault) {
 		// Change the color property to COMPARISON for the two array indices being compared			
 		setTimeout(() => {		
 			// Only change color to COMPARE if Array element is not already in FINAL color state
 			// Array element's [2] denotes FINAL state. Only change color if FINAL state is false
-			if (!array[i][2]) {array[i][1] = COMPARISON_COLOR;}
-			if (!array[j][2]) {array[j][1] = COMPARISON_COLOR;}
+			array[i][1] = COMPARISON_COLOR;
+			array[j][1] = COMPARISON_COLOR;
 			this.setState(state => ({array: array}));
 		}, frameNumber * ANIMATION_SPEED_MS);
 
 		// Optimizes animation by not reverting to DEFAULT color if the same index is about 
 		// to get some other color state in the very next frame. Otherwise, we revert to default
 		// in next frame
-		if (revertToPrimary) {
-			setTimeout(() => {	
-				// Only change color to COMPARE if Array element is not already in FINAL color state
-				// Array element's [2] denotes FINAL state. Only change color if FINAL state is false		
-				if (!array[i][2]) {array[i][1] = DEFAULT_COLOR};
-				if (!array[j][2]) {array[j][1] = DEFAULT_COLOR};
-				this.setState(state => ({array: array}));
-			}, (frameNumber+1) * ANIMATION_SPEED_MS);
-		}
+		setTimeout(() => {	
+			// Only change color to COMPARE if Array element is not already in FINAL color state
+			// Array element's [2] denotes FINAL state. Only change color if FINAL state is false		
+			if (array[i][2]) {array[i][1] = FINAL_COLOR;}
+			else if (revertToDefault[0]) {array[i][1] = DEFAULT_COLOR;}
+			if (array[j][2]) {array[j][1] = FINAL_COLOR;}
+			else if (revertToDefault[1]) {array[j][1] = DEFAULT_COLOR;}
+			this.setState(state => ({array: array}));
+		}, (frameNumber+1) * ANIMATION_SPEED_MS);
 	}
 
 
-	sequenceSwap(array, i, j, frameNumber, revertToPrimary) {
+	sequenceSwap(array, i, j, frameNumber, revertToDefault) {
 		// Change the color property to SWAP for the two array indices being swapped
 		// Swap values of the two array indices being swapped	
 		setTimeout(() => {
@@ -177,14 +189,14 @@ export default class SortVisualizer extends React.Component {
 		// to get some other color state in the very next frame. Otherwise, we revert to default
 		// in next frame
 		setTimeout(() => {
-			array[i][1] = DEFAULT_COLOR;			
-			if(revertToPrimary) {array[j][1] = DEFAULT_COLOR;}					
+			if(revertToDefault[0]) {array[i][1] = DEFAULT_COLOR;}			
+			if(revertToDefault[1]) {array[j][1] = DEFAULT_COLOR;}					
 			this.setState(state => ({array: array}));
 		}, (frameNumber+1) * ANIMATION_SPEED_MS);	
 	}
 
 
-	sequenceOverwrite(array, i, newValue, frameNumber, revertToPrimary) {
+	sequenceOverwrite(array, i, newValue, frameNumber, revertToDefault) {
 		// Change the color property to SWAP for the Array index whose value is changing
 		// Only change color if newValue is not the same as current value.	
 		setTimeout(() => {
@@ -197,12 +209,10 @@ export default class SortVisualizer extends React.Component {
 		// Optimizes animation by not reverting to DEFAULT color if the same index is about 
 		// to get some other color state in the very next frame. Otherwise, we revert to default
 		// in next frame
-		if (revertToPrimary) {
-			setTimeout(() => {			
-				array[i][1] = DEFAULT_COLOR;
-				this.setState(state => ({array: array}));
-			}, (frameNumber+1) * ANIMATION_SPEED_MS);
-		}
+		setTimeout(() => {			
+			if (revertToDefault[0]) {array[i][1] = DEFAULT_COLOR;}
+			this.setState(state => ({array: array}));
+		}, (frameNumber+1) * ANIMATION_SPEED_MS);
 	}
 
 
@@ -224,6 +234,7 @@ export default class SortVisualizer extends React.Component {
 			    <button onClick={() => this.resetArray()}>Generate new array!</button>
 			    <button onClick={() => this.bubbleSortButtonPressed()}>Bubble Sort</button>
 			    <button onClick={() => this.mergeSortButtonPressed()}>Merge Sort</button>
+			    <button onClick={() => this.quickSortButtonPressed()}>Quick Sort</button>
 		    </div>
 	    );
 	}
@@ -232,24 +243,21 @@ export default class SortVisualizer extends React.Component {
 // Optimizes animation by not reverting to DEFAULT color if the same index is about 
 // to get some other color state in the very next frame. Otherwise, we revert to default
 // in next frame. A little hacky right now.
-function checkPrimaryColorRevert(sequence, i) {
-	if (i === sequence.length-1) {return true;}
-	let sequence_function = sequence[i][0];
-	
-	if (sequence_function === "compare") {
-		if (sequence[i+1][0] === "swap") {
-			return false;
+function checkDefaultColorRevert(sequence, i) {
+	// Format: [bool, bool] corresponding to revertToDefault values for ArrayBars 1 & 2
+	// being compared or swapped.
+	let revertToDefault = [true, true];
+
+	if (i !== sequence.length-1) {
+		if (sequence[i][1] === sequence[i+1][1]) {
+			revertToDefault[0] = false;
 		}
-		return true;
-	}
-	
-	if (sequence[i][1] === sequence[i+1][1]) {
-		return false;
+		if (sequence[i][2] === sequence[i+1][2]) {
+			revertToDefault[1] = false;
+		}
 	}
 
-	return true;
-
-			
+	return revertToDefault;			
 }
 
 

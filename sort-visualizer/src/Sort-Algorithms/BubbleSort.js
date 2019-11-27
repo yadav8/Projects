@@ -8,8 +8,6 @@ export default function getBubbleSortSequence (array) {
 	return sequence;
 }
 
-
-
 function bubbleSort (array, sequence) {
 	var length = array.length;
 
