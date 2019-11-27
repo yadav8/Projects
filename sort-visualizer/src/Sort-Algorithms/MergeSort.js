@@ -1,5 +1,4 @@
-//INSPIRED FROM CLEMENT MIHAELESCU
-//https://github.com/clementmihailescu/Sorting-Visualizer-Tutorial/blob/master/src/sortingAlgorithms/sortingAlgorithms.js
+//INSPIRED FROM CLEMENT MIHAELESCU, AlgoExpert.IO
 
 //Added FINAL state logic, made it work for this projects codebase
 //RE-FACTOR AND RE-COMMENT THIS CODE
