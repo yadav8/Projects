@@ -8,10 +8,10 @@ import getMergeSortSequence from '../Sort-Algorithms/MergeSort.js';
 import getQuickSortSequence from '../Sort-Algorithms/QuickSort.js';
 
 // Change this value for the number of bars (value) in the array.
-const ARRAY_SIZE = 10;
+const ARRAY_SIZE = 200;
 
 // Change this value for the speed of the animations.
-const ANIMATION_SPEED_MS = 500; //ARRAY_SIZE/10;
+const ANIMATION_SPEED_MS = 10; //ARRAY_SIZE/10;
 
 // Resizes to fit browser window
 let arrayContainerWidth = window.innerWidth - 200;
