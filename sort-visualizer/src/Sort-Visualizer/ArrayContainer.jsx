@@ -131,13 +131,24 @@ export default class ArrayContainer extends React.Component {
 
 			// Calls appropriate sequence function logic for the upcoming frame to be rendered
 			if (sequence_function === "compare") {
-				this.sequenceCompare(array_copy, array_i, array_j, i, revertToDefault);
+				//this.sequenceCompare(array_copy, array_i, array_j, i, revertToDefault);
+				setTimeout(() => {
+					this.setState(sequenceCompare1(array_copy, array_i, array_j, i, revertToDefault));
+				}, i * ANIMATION_SPEED_MS);
+				setTimeout(() => {
+					this.setState(sequenceCompare2(array_copy, array_i, array_j, i, revertToDefault));
+				}, (i+1) * ANIMATION_SPEED_MS);
+				//this.setState(sequenceCompare2(array_copy, array_i, array_j, i, revertToDefault));
+				//this.setState((array_copy, array_i, array_j, i, revertToDefault) => sequenceCompare2());
 			}
 			else if (sequence_function === "swap") {		
 				this.sequenceSwap(array_copy, array_i, array_j, i, revertToDefault);				
 			}
 			else if (sequence_function === "overwrite") {
 				this.sequenceOverwrite(array_copy, array_i, array_j, i, revertToDefault);
+			}
+			else if (sequence_function === "pivot") {
+				this.sequencePivot(array_copy, array_i, array_j, i, revertToDefault);
 			}
 			else if (sequence_function === "final") {
 				// Change the color property to FINAL when ArrayBar has reached its final position			
@@ -150,29 +161,29 @@ export default class ArrayContainer extends React.Component {
 		}
 	}
 
-	sequenceCompare(array, i, j, frameNumber, revertToDefault) {
-		// Change the color property to COMPARISON for the two array indices being compared			
-		setTimeout(() => {		
-			// Only change color to COMPARE if Array element is not already in FINAL color state
-			// Array element's [2] denotes FINAL state. Only change color if FINAL state is false
-			array[i][1] = COMPARISON_COLOR;
-			array[j][1] = COMPARISON_COLOR;
-			this.setState(state => ({array: array}));
-		}, frameNumber * ANIMATION_SPEED_MS);
+	// sequenceCompare(array, i, j, frameNumber, revertToDefault) {
+	// 	// Change the color property to COMPARISON for the two array indices being compared			
+	// 	setTimeout(() => {		
+	// 		// Only change color to COMPARE if Array element is not already in FINAL color state
+	// 		// Array element's [2] denotes FINAL state. Only change color if FINAL state is false
+	// 		array[i][1] = COMPARISON_COLOR;
+	// 		array[j][1] = COMPARISON_COLOR;
+	// 		this.setState(state => ({array: array}));
+	// 	}, frameNumber * ANIMATION_SPEED_MS);
 
-		// Optimizes animation by not reverting to DEFAULT color if the same index is about 
-		// to get some other color state in the very next frame. Otherwise, we revert to default
-		// in next frame
-		setTimeout(() => {	
-			// Only change color to COMPARE if Array element is not already in FINAL color state
-			// Array element's [2] denotes FINAL state. Only change color if FINAL state is false		
-			if (array[i][2]) {array[i][1] = FINAL_COLOR;}
-			else if (revertToDefault[0]) {array[i][1] = DEFAULT_COLOR;}
-			if (array[j][2]) {array[j][1] = FINAL_COLOR;}
-			else if (revertToDefault[1]) {array[j][1] = DEFAULT_COLOR;}
-			this.setState(state => ({array: array}));
-		}, (frameNumber+1) * ANIMATION_SPEED_MS);
-	}
+	// 	// Optimizes animation by not reverting to DEFAULT color if the same index is about 
+	// 	// to get some other color state in the very next frame. Otherwise, we revert to default
+	// 	// in next frame
+	// 	setTimeout(() => {	
+	// 		// Only change color to COMPARE if Array element is not already in FINAL color state
+	// 		// Array element's [2] denotes FINAL state. Only change color if FINAL state is false		
+	// 		if (array[i][2]) {array[i][1] = FINAL_COLOR;}
+	// 		else if (revertToDefault[0]) {array[i][1] = DEFAULT_COLOR;}
+	// 		if (array[j][2]) {array[j][1] = FINAL_COLOR;}
+	// 		else if (revertToDefault[1]) {array[j][1] = DEFAULT_COLOR;}
+	// 		this.setState(state => ({array: array}));
+	// 	}, (frameNumber+1) * ANIMATION_SPEED_MS);
+	// }
 
 
 	sequenceSwap(array, i, j, frameNumber, revertToDefault) {
@@ -214,6 +225,26 @@ export default class ArrayContainer extends React.Component {
 			this.setState(state => ({array: array}));
 		}, (frameNumber+1) * ANIMATION_SPEED_MS);
 	}
+
+
+	// sequencePivot(array, i, newValue, frameNumber, revertToDefault) {
+	// 	// Change the color property to SWAP for the Array index whose value is changing
+	// 	// Only change color if newValue is not the same as current value.	
+	// 	setTimeout(() => {
+	// 		if (array[i][0] !== newValue) {		
+	// 			array[i] = [newValue, SWAP_COLOR];
+	// 		}	
+	// 		this.setState(state => ({array: array}));
+	// 	}, frameNumber * ANIMATION_SPEED_MS);
+
+	// 	// Optimizes animation by not reverting to DEFAULT color if the same index is about 
+	// 	// to get some other color state in the very next frame. Otherwise, we revert to default
+	// 	// in next frame
+	// 	setTimeout(() => {			
+	// 		if (revertToDefault[0]) {array[i][1] = DEFAULT_COLOR;}
+	// 		this.setState(state => ({array: array}));
+	// 	}, (frameNumber+1) * ANIMATION_SPEED_MS);
+	// }
 
 
 	render() {
@@ -263,3 +294,30 @@ function checkDefaultColorRevert(sequence, i) {
 
 // From https://stackoverflow.com/questions/4959975/generate-random-number-between-two-numbers-in-javascript
 const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+
+
+function sequenceCompare1(array, i, j, frameNumber, revertToDefault) {
+	// Change the color property to COMPARISON for the two array indices being compared			
+	//setTimeout(() => {		
+		// Only change color to COMPARE if Array element is not already in FINAL color state
+		// Array element's [2] denotes FINAL state. Only change color if FINAL state is false
+		array[i][1] = COMPARISON_COLOR;
+		array[j][1] = COMPARISON_COLOR;
+		return({array: array});
+	//}, frameNumber * ANIMATION_SPEED_MS);
+}
+
+	// Optimizes animation by not reverting to DEFAULT color if the same index is about 
+	// to get some other color state in the very next frame. Otherwise, we revert to default
+	// in next frame
+function sequenceCompare2(array, i, j, frameNumber, revertToDefault) {
+	//setTimeout(() => {	
+		// Only change color to COMPARE if Array element is not already in FINAL color state
+		// Array element's [2] denotes FINAL state. Only change color if FINAL state is false		
+		if (array[i][2]) {array[i][1] = FINAL_COLOR;}
+		else if (revertToDefault[0]) {array[i][1] = DEFAULT_COLOR;}
+		if (array[j][2]) {array[j][1] = FINAL_COLOR;}
+		else if (revertToDefault[1]) {array[j][1] = DEFAULT_COLOR;}
+		return({array: array});
+	//}, (frameNumber+1) * ANIMATION_SPEED_MS);
+}
