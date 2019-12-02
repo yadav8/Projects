@@ -11,7 +11,7 @@ import getQuickSortSequence from '../Sort-Algorithms/QuickSort.js';
 const ARRAY_SIZE = 200;
 
 // Change this value for the speed of the animations.
-const ANIMATION_SPEED_MS = 20; //ARRAY_SIZE/10;
+const ANIMATION_SPEED_MS = 30; //ARRAY_SIZE/10;
 
 // Resizes to fit browser window
 let arrayContainerWidth = window.innerWidth - 200;

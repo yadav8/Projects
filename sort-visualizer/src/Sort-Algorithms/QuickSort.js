@@ -27,7 +27,6 @@ function quickSort(array, sequence, leftIdx, rightIdx) {
 function partition(array, sequence, leftIdx, rightIdx) {
 	var pivotIdx = Math.floor((rightIdx+leftIdx)/2);
 	var pivot = array[pivotIdx];
-
 	//sequence.push(["pivot", pivotIdx, -1]);
 
 	while (leftIdx <= rightIdx) {		
