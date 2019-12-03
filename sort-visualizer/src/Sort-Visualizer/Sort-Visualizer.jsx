@@ -9,7 +9,7 @@ class SortVisualizer extends React.Component {
 		return (
 		    <div className="SortVisualizer">
 		      <ArrayContainer>
-
+		      
 		      </ArrayContainer>
 		    </div>      
   		);

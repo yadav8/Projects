@@ -13,10 +13,10 @@ function bubbleSort (array, sequence) {
 
     for (var i = 0; i < length; i++) { 
         for (var j = 0; j < (length - i - 1); j++) { 
-        	sequence.push(["compare",j,j+1]);	// j and j+1 first get compared
+        	sequence.push(["compare", j, j+1]);	// j and j+1 first get compared
 
             if(array[j] > array[j+1]) {
-            	sequence.push(["swap",j,j+1]); // inside the if block - j and j+1 are swapped
+            	sequence.push(["swap", j, j+1]); // inside the if block - j and j+1 are swapped
 
                 // Swap the numbers
                 var tmp = array[j];
@@ -26,7 +26,7 @@ function bubbleSort (array, sequence) {
 
             // Lets visualizer know that array bar has reached final position in sequence
             if(j === (length-i-2)) {
-            	sequence.push(["final",j+1,-1]);
+            	sequence.push(["final", j+1, 1]);
             }
         }        
     }

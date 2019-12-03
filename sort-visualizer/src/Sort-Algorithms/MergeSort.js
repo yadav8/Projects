@@ -50,14 +50,14 @@ function doMerge(
       // value at index i in the auxiliary array.
       //sequence.push([k, auxiliaryArray[i]]);
       sequence.push(["overwrite", k, auxiliaryArray[i]]);
-      if (finalMerge) {sequence.push(["final", k, -1]);}
+      if (finalMerge) {sequence.push(["final", k, 1]);}
       mainArray[k++] = auxiliaryArray[i++];
     } else {
       // We overwrite the value at index k in the original array with the
       // value at index j in the auxiliary array.
       //sequence.push([k, auxiliaryArray[j]]);
       sequence.push(["overwrite", k, auxiliaryArray[j]]);
-      if (finalMerge) {sequence.push(["final", k, -1]);}
+      if (finalMerge) {sequence.push(["final", k, 1]);}
       mainArray[k++] = auxiliaryArray[j++];
     }
   }
@@ -70,7 +70,7 @@ function doMerge(
     // value at index i in the auxiliary array.
     //sequence.push([k, auxiliaryArray[i]]);
     sequence.push(["overwrite", k, auxiliaryArray[i]]);
-    if (finalMerge) {sequence.push(["final", k, -1]);}
+    if (finalMerge) {sequence.push(["final", k, 1]);}
     mainArray[k++] = auxiliaryArray[i++];
   }
   while (j <= endIdx) {
@@ -82,7 +82,7 @@ function doMerge(
     // value at index j in the auxiliary array.
     //sequence.push([k, auxiliaryArray[j]]);
     sequence.push(["overwrite", k, auxiliaryArray[j]]);
-    if (finalMerge) {sequence.push(["final", k, -1]);}
+    if (finalMerge) {sequence.push(["final", k, 1]);}
     mainArray[k++] = auxiliaryArray[j++];
   }
 }

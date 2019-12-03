@@ -27,7 +27,7 @@ function quickSort(array, sequence, leftIdx, rightIdx) {
 function partition(array, sequence, leftIdx, rightIdx) {
 	var pivotIdx = Math.floor((rightIdx+leftIdx)/2);
 	var pivot = array[pivotIdx];
-	//sequence.push(["pivot", pivotIdx, -1]);
+	sequence.push(["pivot", pivotIdx, 1]);
 
 	while (leftIdx <= rightIdx) {		
 		while (array[leftIdx] < pivot) {
@@ -41,7 +41,7 @@ function partition(array, sequence, leftIdx, rightIdx) {
         if (leftIdx <= rightIdx) {
             // Swapping two elements
             // Make separate swap function
-            if(leftIdx !== rightIdx) {sequence.push(["swap", leftIdx, rightIdx]);            }
+            if(leftIdx !== rightIdx) {sequence.push(["swap", leftIdx, rightIdx]);}
             var tmp = array[leftIdx];
             array[leftIdx] = array[rightIdx];
             array[rightIdx] = tmp;
@@ -49,6 +49,11 @@ function partition(array, sequence, leftIdx, rightIdx) {
             rightIdx--;
         }
 	}
+
+	sequence.push(["pivot", pivotIdx, -1]);
+
+	// NEED TO FIX final color setting on Quick sort. A little hacky right now.
+	sequence.push(["final", leftIdx-1, 1]);
 
 	return leftIdx;
 }

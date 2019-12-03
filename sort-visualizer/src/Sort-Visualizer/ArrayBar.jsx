@@ -11,7 +11,6 @@ export default class ArrayBar extends React.Component {
 		
 		this.state = {
 			value: this.props.value,
-			idx: this.props.idx,
 			color: this.props.color,
 			width: this.props.width,
 		};
@@ -22,7 +21,6 @@ export default class ArrayBar extends React.Component {
 	static getDerivedStateFromProps(props, state) {
 		state = {
 					value: props.value,
-					idx: props.idx,
 					color: props.color,
 					width: props.width,
 				};
@@ -31,12 +29,11 @@ export default class ArrayBar extends React.Component {
 	}
 
 	render() {
-		const {value, idx, color, width} = this.state;
+		const {value, color, width} = this.state;
 
 		return (
 			<div
 				className = "ArrayBar"
-				key = {idx}
 				style = {{
 					backgroundColor: color,
 					width: width,
