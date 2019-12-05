@@ -2,6 +2,8 @@ import React from 'react';
 
 import './Sort-Visualizer.css';
 
+const VERT_SCALING_FACTOR = 1;
+
 
 // This component stores the visual representation of each element in the ArrayContainer
 // Automatically updates with ArrayContainer
@@ -37,7 +39,7 @@ export default class ArrayBar extends React.Component {
 				style = {{
 					backgroundColor: color,
 					width: width,
-		        	height: `${value}px`,
+		        	height: `${value*VERT_SCALING_FACTOR}px`,
 
 				}}>
 			</div>
