@@ -20,7 +20,7 @@ import getQuickSortSequence from '../Sort-Algorithms/QuickSort.js';
 // TODO: Make these user-configurable
 
 // Change this value for the number of bars (value) in the array.
-const ARRAY_SIZE = 50;
+const ARRAY_SIZE = 10;
 
 // Change this value for the speed of the animations.
 const ANIMATION_SPEED_MS = 50; //ARRAY_SIZE/10;
@@ -77,8 +77,6 @@ export default class ArrayContainer extends React.Component {
 
 
 	// Generates new array
-	// TODO: Create new function resetArray which just resets the color and final/pivot bool values
-	//		 of the same array.
 	generateArray() {
 		const array = [];
 		const color = DEFAULT_COLOR;
@@ -88,6 +86,18 @@ export default class ArrayContainer extends React.Component {
 			//array.push([testArr[i], color, false, false]);
 		}		
 		this.setState({array, width});
+	}
+
+	// Resets color and final/pivot bool values of array
+	resetArray() {
+		let array_copy = [...this.state.array];
+		for (let i = 0; i < array_copy.length; i++) {
+			array_copy[i][1] = DEFAULT_COLOR;
+			array_copy[i][2] = false;
+			array_copy[i][3] = false;
+		}
+
+		this.setState({array: array_copy});
 	}
 
 	// Handles updating Component dimensions on window resize
@@ -100,6 +110,7 @@ export default class ArrayContainer extends React.Component {
 
 	// Function call when Bubble Sort button is pressed
 	bubbleSortButtonPressed() {
+		this.resetArray();
 		// Extract the actual array value from our 'array' to send to BubbleSort
 		let value_array = this.state.array.map(arraybar => arraybar[0]);
 		const sequence = getBubbleSortSequence(value_array);
@@ -109,6 +120,7 @@ export default class ArrayContainer extends React.Component {
 
 	// Function call when Merge Sort button is pressed
 	mergeSortButtonPressed() {
+		this.resetArray();
 		// Extract the actual array value from our 'array' to send to MergeSort
 		let value_array = this.state.array.map(arraybar => arraybar[0]);
 		const sequence = getMergeSortSequence(value_array);
@@ -119,6 +131,7 @@ export default class ArrayContainer extends React.Component {
 	// Function call when Quick Sort button is pressed
 	// Need to get Pivot color and Final color working
 	quickSortButtonPressed() {
+		this.resetArray();
 		// Extract the actual array value from our 'array' to send to QuickSort
 		let value_array = this.state.array.map(arraybar => arraybar[0]);
 		const sequence = getQuickSortSequence(value_array);
@@ -130,7 +143,7 @@ export default class ArrayContainer extends React.Component {
 	// Bubble Sort: compare, swap, final
 	// Merge Sort: compare, overwrite, final
 	// Quick Sort: compare, swap, pivot, final
-	// Heap Sort: compare, swap, final
+	// Heap Sort: compare, swap, final (TODO)
 	executeSequence(sequence) {
 		let array_copy = [...this.state.array];
 		for (let i = 0; i < sequence.length; i++) {
