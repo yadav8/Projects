@@ -8,6 +8,9 @@ import getMergeSortSequence from '../Sort-Algorithms/MergeSort.js';
 import getQuickSortSequence from '../Sort-Algorithms/QuickSort.js';
 
 /* ** GENERAL TODOS **
+
+Performance: Figure out how to only render the ArrayBar components which are getting updated.
+
 1. Heap sort
 2. Add a display for color legend when a particular sort button is pressed
 3. Disable other buttons when animation is taking place. Make disable look obvious.
@@ -20,10 +23,10 @@ import getQuickSortSequence from '../Sort-Algorithms/QuickSort.js';
 // TODO: Make these user-configurable
 
 // Change this value for the number of bars (value) in the array.
-const ARRAY_SIZE = 10;
+const ARRAY_SIZE = 500;
 
 // Change this value for the speed of the animations.
-const ANIMATION_SPEED_MS = 50; //ARRAY_SIZE/10;
+const ANIMATION_SPEED_MS = 1; //ARRAY_SIZE/10;
 
 // Change this for Array min value
 const ARRAY_MIN = 1;
@@ -36,7 +39,7 @@ const ARRAY_MAX = 700;
 let arrayContainerWidth = window.innerWidth - 200;
 
 // Resizes ArrayBars to ArrayContainer
-let arrayBarWidth = ((window.innerWidth - 200) / (ARRAY_SIZE)) - 2.5;
+let arrayBarWidth = ((window.innerWidth - 200) / (ARRAY_SIZE)) - .5;
 
 // This is the main color of the array bars
 const DEFAULT_COLOR = 'pink';
@@ -57,8 +60,10 @@ export default class ArrayContainer extends React.Component {
 	constructor(props) {
 		super(props);
 
+		//this.test_var = 0;
+
 		this.state = {
-		  array: [], // array element: [value: int, color: string, pivot: bool, final: bool]
+		  array: [], // array element: [value: int, color: string, pivot: bool, final: bool, id: int]
 		  width: arrayContainerWidth,
 		};
 	}
@@ -82,8 +87,8 @@ export default class ArrayContainer extends React.Component {
 		const color = DEFAULT_COLOR;
 		const width = arrayContainerWidth;
 		for (let i = 0; i < ARRAY_SIZE; i++) {
-			array.push([randomIntFromInterval(ARRAY_MIN, ARRAY_MAX), color, false, false]);
-			//array.push([testArr[i], color, false, false]);
+			array.push([randomIntFromInterval(ARRAY_MIN, ARRAY_MAX), color, false, false, i]);
+			//array.push([testArr[i], color, false, false, i]);
 		}		
 		this.setState({array, width});
 	}
@@ -103,7 +108,7 @@ export default class ArrayContainer extends React.Component {
 	// Handles updating Component dimensions on window resize
 	handleResize() {
 		arrayContainerWidth = window.innerWidth - 200;
-		arrayBarWidth = ((window.innerWidth - 200) / (ARRAY_SIZE)) - 2.5;
+		arrayBarWidth = ((window.innerWidth - 200) / (ARRAY_SIZE)) - .5;
 		this.setState({width: arrayContainerWidth});
 	}
 
@@ -186,10 +191,10 @@ export default class ArrayContainer extends React.Component {
 	sequenceCompare(array, i, j, frameNumber, revertToDefault) {
 		// Change the color property to COMPARISON for the two array indices being compared			
 		setTimeout(() => {		
-			// Only change color to COMPARE if Array element is not already in FINAL color state
-			// Array element's [2] denotes FINAL state. Only change color if FINAL state is false
-			array[i][1] = COMPARISON_COLOR;
-			array[j][1] = COMPARISON_COLOR;
+			// Only change color to COMPARE if Array element is not already in PIVOT color state
+			// Array element's [2] denotes PIVOT state. Only change color if PIVOT state is false
+			if (!array[i][2]) {array[i][1] = COMPARISON_COLOR;}
+			if (!array[j][2]) {array[j][1] = COMPARISON_COLOR;}
 			this.setState(state => ({array: array}));
 		}, frameNumber * ANIMATION_SPEED_MS);
 
@@ -216,8 +221,10 @@ export default class ArrayContainer extends React.Component {
 		// Swap values of the two array indices being swapped	
 		setTimeout(() => {
 			let swapper = array[i][0];				
-			array[i] = [array[j][0], SWAP_COLOR, array[i][2], array[i][3]];
-			array[j] = [swapper, SWAP_COLOR, array[j][2], array[j][3]];					
+			array[i][0] = array[j][0];
+			array[i][1] = SWAP_COLOR;
+			array[j][0] = swapper;
+			array[j][1] = SWAP_COLOR;					
 			this.setState(state => ({array: array}));
 		}, frameNumber * ANIMATION_SPEED_MS); 
 
@@ -242,7 +249,8 @@ export default class ArrayContainer extends React.Component {
 		// Only change color if newValue is not the same as current value.	
 		setTimeout(() => {
 			if (array[i][0] !== newValue) {		
-				array[i] = [newValue, SWAP_COLOR, array[i][2], array[i][3]];
+				array[i][0] = newValue;
+				array[i][1] = SWAP_COLOR;
 			}	
 			this.setState(state => ({array: array}));
 		}, frameNumber * ANIMATION_SPEED_MS);
@@ -257,6 +265,7 @@ export default class ArrayContainer extends React.Component {
 	}
 
 
+	//TODO: Better comments
 	sequencePivot(array, i, pivot, frameNumber, revertToDefault) {
 		// If already in FINAL state, don't bother
 		if (array[i][3] === true && pivot < 0) {return;}
@@ -307,17 +316,19 @@ export default class ArrayContainer extends React.Component {
 
 
 	render() {
-		const array = this.state.array;
-		const width = this.state.width;
+		//this.test_var++;
+		//console.log(this.test_var);
+		//const array = this.state.array;
+		//const width = this.state.width;
 
 	    return (
-	    	<div className = "ArrayContainer" style={{width: width,}}>
-		    	{array.map((value, idx) => (
+	    	<div className = "ArrayContainer" style={{width: this.state.width,}}>
+		    	{this.state.array.map(([value, color, _, __, id]) => (
 					<ArrayBar
-						value={value[0]}
-						key={idx}
-						color={value[1]}
-						width={arrayBarWidth}
+						key = {id}
+						value = {value}
+						color = {color}
+						width = {arrayBarWidth}
 					/>
 			    ))}
 			    <br/>
@@ -354,10 +365,15 @@ function checkDefaultColorRevert(sequence, i) {
 // From https://stackoverflow.com/questions/4959975/generate-random-number-between-two-numbers-in-javascript
 const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
+
+
 /*******************************
-IF SWITCHING OVER TO FUNCTIONAL SETSTATE,
-USE FUNCTIONS BELOW AS STARTING
+TEST CODE BELOW FOR EXPERIMENTAL ALTERNATIVE IMPLEMENTATIONS:
 *******************************/
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// 1. FUNCTIONAL SETSTATE IMPLEMENTATION:
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // function sequenceCompare1(array, i, j, frameNumber, revertToDefault) {
 // 	// Change the color property to COMPARISON for the two array indices being compared			
 // 	//setTimeout(() => {		
@@ -383,3 +399,5 @@ USE FUNCTIONS BELOW AS STARTING
 // 		return({array: array});
 // 	//}, (frameNumber+1) * ANIMATION_SPEED_MS);
 // }
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

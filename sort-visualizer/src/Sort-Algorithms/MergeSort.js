@@ -1,5 +1,5 @@
 // Added FINAL state logic
-// RE-FACTOR AND RE-COMMENT THIS CODE
+// TODO: Re-factor, re-comment
 
 export default function getMergeSortSequence(array) {
   const sequence = [];

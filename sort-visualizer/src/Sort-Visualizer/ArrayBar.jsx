@@ -7,7 +7,7 @@ const VERT_SCALING_FACTOR = 1;
 
 // This component stores the visual representation of each element in the ArrayContainer
 // Automatically updates with ArrayContainer
-export default class ArrayBar extends React.Component {
+export default class ArrayBar extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		
@@ -32,6 +32,7 @@ export default class ArrayBar extends React.Component {
 
 	render() {
 		const {value, color, width} = this.state;
+		//console.log("here");
 
 		return (
 			<div
