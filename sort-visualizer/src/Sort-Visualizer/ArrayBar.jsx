@@ -32,7 +32,6 @@ export default class ArrayBar extends React.PureComponent {
 
 	render() {
 		const {value, color, width} = this.state;
-		//console.log("here");
 
 		return (
 			<div
