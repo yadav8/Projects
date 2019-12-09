@@ -1,5 +1,5 @@
 import React from 'react';
-//import update from 'immutability-helper';
+import update from 'immutability-helper';
 
 import './Sort-Visualizer.css';
 import ArrayBar from './ArrayBar.jsx';
@@ -9,8 +9,9 @@ import getQuickSortSequence from '../Sort-Algorithms/QuickSort.js';
 
 /* ** GENERAL TODOS **
 
-Change this.state.array to JSON for easier reading
-Then use immutability helper to stop copying array and just updating it
+- Use immutability helper to stop copying array and just updating it, during
+sequence execution.
+- Make sure this.state.array is not being mutated outside setState because of how deep cloning works.
 
 1. Heap sort
 2. Add a display for color legend when a particular sort button is pressed
@@ -24,10 +25,10 @@ Then use immutability helper to stop copying array and just updating it
 // TODO: Make these user-configurable
 
 // Change this value for the number of bars (value) in the array.
-const ARRAY_SIZE = 50;
+const ARRAY_SIZE = 250;
 
 // Change this value for the speed of the animations.
-const ANIMATION_SPEED_MS = 3; //ARRAY_SIZE/10;
+const ANIMATION_SPEED_MS = 2; //ARRAY_SIZE/10;
 
 // Change this for Array min value
 const ARRAY_MIN = 1;
@@ -46,7 +47,7 @@ let arrayBarWidth = ((window.innerWidth - 200) / (ARRAY_SIZE)) - .5;
 const DEFAULT_COLOR = 'pink';
 
 // This is the color of array bars that are being compared throughout the animations
-const COMPARISON_COLOR = 'gold';
+const COMPARISON_COLOR = 'turquoise';
 
 // This is the color of array bars that are being swapped throughout the animations
 const SWAP_COLOR = 'blueviolet';
@@ -62,19 +63,19 @@ export default class ArrayContainer extends React.Component {
 		super(props);
 
 		this.state = {
-		  array: [], // array element: [value: int, color: string, pivot: bool, final: bool, id: int]
+		  array: [],	// Array of JSON objects  
 		  width: arrayContainerWidth,
 		};
 	}
 
-
   	// New array for every reload
+  	// Adds event listener to handle window resizing
 	componentDidMount() {
 		this.generateArray();
 		window.addEventListener('resize', () => this.handleResize());
 	}
 
-
+	// Removes any added event listeners
 	componentWillUnmount() {
 		window.removeEventListener('resize', () => this.handleResize());
 	}
@@ -85,9 +86,7 @@ export default class ArrayContainer extends React.Component {
 		const array = [];
 		const width = arrayContainerWidth;
 		for (let i = 0; i < ARRAY_SIZE; i++) {
-			//array.push([randomIntFromInterval(ARRAY_MIN, ARRAY_MAX), color, false, false, i]);
 			array.push(this.createArrayElement(i));
-			//array.push([testArr[i], color, false, false, i]);
 		}		
 		this.setState({array, width});
 	}
@@ -96,9 +95,9 @@ export default class ArrayContainer extends React.Component {
 	resetArray() {
 		let array_copy = [...this.state.array];
 		for (let i = 0; i < array_copy.length; i++) {
-			array_copy[i]["color"] = DEFAULT_COLOR;
-			array_copy[i]["pivot"] = false;
-			array_copy[i]["final"] = false;
+			array_copy[i].color = DEFAULT_COLOR;
+			array_copy[i].pivot = false;
+			array_copy[i].final = false;
 		}
 
 		this.setState({array: array_copy});
@@ -120,13 +119,15 @@ export default class ArrayContainer extends React.Component {
 		this.setState({width: arrayContainerWidth});
 	}
 
+	// Extracts the actual array value from this.state.array to send to Sorting Algorithms
+	getValueArray() {
+		return this.state.array.map(arrayElement => arrayElement.value);
+	}
 
 	// Function call when Bubble Sort button is pressed
 	bubbleSortButtonPressed() {
 		this.resetArray();
-		// Extract the actual array value from our 'array' to send to BubbleSort
-		let value_array = this.state.array.map(arrayElement => arrayElement["value"]);
-		const sequence = getBubbleSortSequence(value_array);
+		const sequence = getBubbleSortSequence(this.getValueArray());
 		this.executeSequence(sequence);
 		
 	}
@@ -134,9 +135,7 @@ export default class ArrayContainer extends React.Component {
 	// Function call when Merge Sort button is pressed
 	mergeSortButtonPressed() {
 		this.resetArray();
-		// Extract the actual array value from our 'array' to send to MergeSort
-		let value_array = this.state.array.map(arrayElement => arrayElement["value"]);
-		const sequence = getMergeSortSequence(value_array);
+		const sequence = getMergeSortSequence(this.getValueArray());
 		this.executeSequence(sequence);
 		
 	}
@@ -145,9 +144,7 @@ export default class ArrayContainer extends React.Component {
 	// Need to get Pivot color and Final color working
 	quickSortButtonPressed() {
 		this.resetArray();
-		// Extract the actual array value from our 'array' to send to QuickSort
-		let value_array = this.state.array.map(arrayElement => arrayElement["value"]);
-		const sequence = getQuickSortSequence(value_array);
+		const sequence = getQuickSortSequence(this.getValueArray());
 		this.executeSequence(sequence);		
 	}
 
@@ -201,8 +198,8 @@ export default class ArrayContainer extends React.Component {
 		setTimeout(() => {		
 			// Only change color to COMPARE if Array element is not already in PIVOT color state
 			// Array element's [2] denotes PIVOT state. Only change color if PIVOT state is false
-			if (!array[i]["pivot"]) {array[i]["color"] = COMPARISON_COLOR;}
-			if (!array[j]["pivot"]) {array[j]["color"] = COMPARISON_COLOR;}
+			if (!array[i].pivot) {array[i].color = COMPARISON_COLOR;}
+			if (!array[j].pivot) {array[j].color = COMPARISON_COLOR;}
 			this.setState(state => ({array: array}));
 		}, frameNumber * ANIMATION_SPEED_MS);
 
@@ -212,13 +209,13 @@ export default class ArrayContainer extends React.Component {
 		setTimeout(() => {	
 			// Only change color to COMPARE if Array element is not already in FINAL color state
 			// Array element's [2] denotes FINAL state. Only change color if FINAL state is false
-			if (array[i]["final"] === true) {array[i]["color"] = FINAL_COLOR;}
-			else if (array[i]["pivot"] === true) {array[i]["color"] = PIVOT_COLOR;}		
-			else if (revertToDefault[0]) {array[i]["color"] = DEFAULT_COLOR;}
+			if (array[i].final === true) {array[i].color = FINAL_COLOR;}
+			else if (array[i].pivot === true) {array[i].color = PIVOT_COLOR;}		
+			else if (revertToDefault[0]) {array[i].color = DEFAULT_COLOR;}
 
-			if (array[j]["final"] === true) {array[j]["color"] = FINAL_COLOR;}
-			else if (array[j]["pivot"] === true) {array[j]["color"] = PIVOT_COLOR;}
-			else if (revertToDefault[1]) {array[j]["color"] = DEFAULT_COLOR;}
+			if (array[j].final === true) {array[j].color = FINAL_COLOR;}
+			else if (array[j].pivot === true) {array[j].color = PIVOT_COLOR;}
+			else if (revertToDefault[1]) {array[j].color = DEFAULT_COLOR;}
 			this.setState(state => ({array: array}));
 		}, (frameNumber+1) * ANIMATION_SPEED_MS);
 	}
@@ -228,11 +225,11 @@ export default class ArrayContainer extends React.Component {
 		// Change the color property to SWAP for the two array indices being swapped
 		// Swap values of the two array indices being swapped	
 		setTimeout(() => {
-			let swapper = array[i]["value"];				
-			array[i]["value"] = array[j]["value"];
-			array[i]["color"] = SWAP_COLOR;
-			array[j]["value"] = swapper;
-			array[j]["color"] = SWAP_COLOR;					
+			let swapper = array[i].value;				
+			array[i].value = array[j].value;
+			array[i].color = SWAP_COLOR;
+			array[j].value = swapper;
+			array[j].color = SWAP_COLOR;					
 			this.setState(state => ({array: array}));
 		}, frameNumber * ANIMATION_SPEED_MS); 
 
@@ -240,13 +237,13 @@ export default class ArrayContainer extends React.Component {
 		// to get some other color state in the very next frame. Otherwise, we revert to default
 		// in next frame
 		setTimeout(() => {
-			if (array[i]["final"] === true) {array[i]["color"] = FINAL_COLOR;}
-			else if (array[i]["pivot"] === true) {array[i]["color"] = PIVOT_COLOR;}
-			else if (revertToDefault[0]) {array[i]["color"] = DEFAULT_COLOR;}
+			if (array[i].final === true) {array[i].color = FINAL_COLOR;}
+			else if (array[i].pivot === true) {array[i].color = PIVOT_COLOR;}
+			else if (revertToDefault[0]) {array[i].color = DEFAULT_COLOR;}
 			
-			if (array[j]["final"] === true) {array[j]["color"] = FINAL_COLOR;}
-			else if (array[j]["pivot"] === true) {array[j]["color"] = PIVOT_COLOR;}
-			else if (revertToDefault[1]) {array[j]["color"] = DEFAULT_COLOR;}					
+			if (array[j].final === true) {array[j].color = FINAL_COLOR;}
+			else if (array[j].pivot === true) {array[j].color = PIVOT_COLOR;}
+			else if (revertToDefault[1]) {array[j].color = DEFAULT_COLOR;}					
 			this.setState(state => ({array: array}));
 		}, (frameNumber+1) * ANIMATION_SPEED_MS);	
 	}
@@ -256,9 +253,9 @@ export default class ArrayContainer extends React.Component {
 		// Change the color property to SWAP for the Array index whose value is changing
 		// Only change color if newValue is not the same as current value.	
 		setTimeout(() => {
-			if (array[i]["value"] !== newValue) {		
-				array[i]["value"] = newValue;
-				array[i]["color"] = SWAP_COLOR;
+			if (array[i].value !== newValue) {		
+				array[i].value = newValue;
+				array[i].color = SWAP_COLOR;
 			}	
 			this.setState(state => ({array: array}));
 		}, frameNumber * ANIMATION_SPEED_MS);
@@ -267,7 +264,7 @@ export default class ArrayContainer extends React.Component {
 		// to get some other color state in the very next frame. Otherwise, we revert to default
 		// in next frame
 		setTimeout(() => {			
-			if (revertToDefault[0]) {array[i]["color"] = DEFAULT_COLOR;}
+			if (revertToDefault[0]) {array[i].color = DEFAULT_COLOR;}
 			this.setState(state => ({array: array}));
 		}, (frameNumber+1) * ANIMATION_SPEED_MS);
 	}
@@ -276,13 +273,13 @@ export default class ArrayContainer extends React.Component {
 	//TODO: Better comments
 	sequencePivot(array, i, pivot, frameNumber, revertToDefault) {
 		// If already in FINAL state, don't bother
-		if (array[i]["final"] === true && pivot < 0) {return;}
+		if (array[i].final && pivot < 0) {return;}
 
 		// Just adding new pivot
 		if (pivot === -1) {
 			setTimeout(() => {
-				array[i]["color"] = PIVOT_COLOR;
-				array[i]["pivot"] = true;	// Set PIVOT color state for array index
+				array[i].color = PIVOT_COLOR;
+				array[i].pivot = true;	// Set PIVOT color state for array index
 				this.setState(state => ({array: array}));
 			}, frameNumber * ANIMATION_SPEED_MS);
 
@@ -291,8 +288,8 @@ export default class ArrayContainer extends React.Component {
 		// Just removing current pivots
 		else if (pivot === -2) {
 			setTimeout(() => {			
-				array[i]["color"] = DEFAULT_COLOR;
-				array[i]["pivot"] = false;	// Reset PIVOT color state for array index
+				array[i].color = DEFAULT_COLOR;
+				array[i].pivot = false;	// Reset PIVOT color state for array index
 				this.setState(state => ({array: array}));
 			}, frameNumber * ANIMATION_SPEED_MS);
 		}
@@ -300,13 +297,13 @@ export default class ArrayContainer extends React.Component {
 		// Moving pivots
 		else {
 			setTimeout(() => {			
-				array[i]["color"] = DEFAULT_COLOR;
-				array[i]["pivot"] = false;	// Reset PIVOT color state for array index
+				array[i].color = DEFAULT_COLOR;
+				array[i].pivot = false;	// Reset PIVOT color state for array index
 
 				// If already in FINAL state, don't bother
-				if (array[pivot]["final"] === true) {return;}
-				array[pivot]["color"] = PIVOT_COLOR;
-				array[pivot]["pivot"] = true;
+				if (array[pivot].final === true) {return;}
+				array[pivot].color = PIVOT_COLOR;
+				array[pivot].pivot = true;
 				this.setState(state => ({array: array}));
 			}, frameNumber * ANIMATION_SPEED_MS);
 		}
@@ -316,8 +313,8 @@ export default class ArrayContainer extends React.Component {
 	sequenceFinal(array, i, frameNumber) {
 		// Change the color property to FINAL when ArrayBar has reached its final position			
 		setTimeout(() => {			
-			array[i]["color"] = FINAL_COLOR;
-			array[i]["final"] = true;	// Set FINAL color state for array index
+			array[i].color = FINAL_COLOR;
+			array[i].final = true;	// Set FINAL color state for array index
 			this.setState(state => ({array: array}));
 		}, frameNumber * ANIMATION_SPEED_MS);
 	}
@@ -331,9 +328,9 @@ export default class ArrayContainer extends React.Component {
 	    	<div className = "ArrayContainer" style={{width: width,}}>
 		    	{array.map((arrayElement) => (
 					<ArrayBar
-						key = {arrayElement["id"]}
-						value = {arrayElement["value"]}
-						color = {arrayElement["color"]}
+						key = {arrayElement.id}
+						value = {arrayElement.value}
+						color = {arrayElement.color}
 						width = {arrayBarWidth}
 					/>
 			    ))}
@@ -398,7 +395,7 @@ TEST CODE BELOW FOR EXPERIMENTAL ALTERNATIVE IMPLEMENTATIONS:
 // 	//setTimeout(() => {	
 // 		// Only change color to COMPARE if Array element is not already in FINAL color state
 // 		// Array element's [2] denotes FINAL state. Only change color if FINAL state is false		
-// 		if (array["pivot"]) {array[i][1] = FINAL_COLOR;}
+// 		if (array.pivot) {array[i][1] = FINAL_COLOR;}
 // 		else if (revertToDefault[0]) {array[i][1] = DEFAULT_COLOR;}
 // 		if (array[j][2]) {array[j][1] = FINAL_COLOR;}
 // 		else if (revertToDefault[1]) {array[j][1] = DEFAULT_COLOR;}
