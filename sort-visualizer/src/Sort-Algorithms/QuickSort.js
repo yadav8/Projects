@@ -1,7 +1,11 @@
+// This function takes an array as argument, and returns the compare and swap sequence
+// of QuickSort being performed on the array. The sequence can then be used to animate
+// and visualize every step of the sort.
 export default function getQuickSortSequence (array) {
 	// Sequence elements will be of the form: ["operation", idx1, idx2]
 	// Where operation can be compare, swap, pivot or final
 	var sequence = [];
+	
 	quickSort(array, sequence, 0, array.length-1);
 	return sequence;
 }

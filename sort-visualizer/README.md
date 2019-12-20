@@ -1,68 +1,37 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Sort Visualizer
 
-## Available Scripts
+This project was created by Sumit Yadav using ReactJS in an effort to gain experience in developing a React App, while solidifying the concepts underlying some popular sorting algorithms.
 
-In the project directory, you can run:
+## Sorting algorithms
 
-### `npm start`
+1. Bubble Sort
+2. Merge Sort
+3. Quick Sort
+4. Heap Sort (In development)
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## How does it work?
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Although the various sorting algorithms presented their own challenges, they all work with the same basic principle of taking 'snapshots' of every step/frame in the algorithm's sequence.
 
-### `npm test`
+The algorithm records whenever two elements are being compared, swapped, when an element reaches its final position and some other such operations which vary with each algorithm.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+###For example: Quick Sort
 
-### `npm run build`
+Quick sort works by choosing a Pivot element in the array, and moving all elements lesser than the pivot to its left (in an ascending sort), and all elements greater to its right. <br />It then recursively calls Quick sort onto the partitioned left and right arrays - until the entire array is sorted.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+As we partition the array and choose a pivot index, we push a ["pivot", index, _ ] 
+'frame' into the recorded sequence. Then as we compare two elements on either side of the pivot, we push a <br /> ["compare", index1, index2] frame into the sequence. Then, if the algorithm decides that they need to be swapped, we push a ["swap", index1, index2] frame.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+The algorithms recognize ahead of time when an element has reached its final position. In the case of quick sort - we know that by definition of the algorithm, when a pivot element finishes moving <br /> respective elements to its left and right arrays - then the pivot has reached its final position in the sorted array. Thus we push a ["final", index1, _ ] frame to the sequence.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Our ArrayContainer gets this sequence from the various sort algorithms, and then displays the frames in order, with speed based on a defined FRAMERATE constant.<br /> Thus creating an animation of the sort which just took place. 
+All operations, such as compare, swap and final have their own unique colors to help identify the sorting sequence.
 
-### `npm run eject`
+## Future goals
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Since I had a lot of fun gradually adding features to this visualizer, I have a list of things I want to implement in the near future:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+1. Add user configurable inputs and sliders for Array size, min and max values, and animation framerate.
+2. Add a color legend for the current sorting algorithm being performed.
+3. Add a musical output where each index of the array corresponds to a different musical note, and each color/operation being performed on the array index modifies that note.<br />The idea is that you should be able to 'hear' the array get sorted.
+4. Add more sorting algorithms! Show the performance of an algorithm and allow a user to compare it to another algorithm with the same array.

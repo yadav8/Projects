@@ -1,12 +1,15 @@
 import React from 'react';
-
 import './Sort-Visualizer.css';
 
+// Scales the height of the ArrayBars by a constant amount over their array 'value'
 const VERT_SCALING_FACTOR = 1;
 
 
 // This component stores the visual representation of each element in the ArrayContainer
-// Automatically updates with ArrayContainer
+
+// 'PureComponent' allows us to change the state of the ArrayContainer, while ONLY updating
+// ArrayBars whose props/state is getting altered. Thus we have maximum of 1-3 ArrayBars being updated
+// every frame, instead of all the ArrayBars.
 export default class ArrayBar extends React.PureComponent {
 	constructor(props) {
 		super(props);
@@ -32,6 +35,7 @@ export default class ArrayBar extends React.PureComponent {
 
 	render() {
 		const {value, color, width} = this.state;
+		const height = value * VERT_SCALING_FACTOR;
 
 		return (
 			<div
@@ -39,7 +43,7 @@ export default class ArrayBar extends React.PureComponent {
 				style = {{
 					backgroundColor: color,
 					width: width,
-		        	height: `${value*VERT_SCALING_FACTOR}px`,
+		        	height: `${height}px`,
 
 				}}>
 			</div>

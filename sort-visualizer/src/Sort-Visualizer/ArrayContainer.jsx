@@ -1,5 +1,5 @@
 import React from 'react';
-import update from 'immutability-helper';
+//import update from 'immutability-helper';
 
 import './Sort-Visualizer.css';
 import ArrayBar from './ArrayBar.jsx';
@@ -24,16 +24,14 @@ sequence execution.
 // *************************************************** //
 // TODO: Make these user-configurable
 
-// Change this value for the number of bars (value) in the array.
-const ARRAY_SIZE = 250;
-
 // Change this value for the speed of the animations.
-const ANIMATION_SPEED_MS = 2; //ARRAY_SIZE/10;
+const ANIMATION_SPEED_MS = 250;
 
-// Change this for Array min value
+// Change this value for the number of bars (value) in the array.
+const ARRAY_SIZE = 20;
+
+// Array min and max possible values
 const ARRAY_MIN = 1;
-
-// Change this for Array max value
 const ARRAY_MAX = 700;
 // *************************************************** //
 
@@ -43,19 +41,12 @@ let arrayContainerWidth = window.innerWidth - 200;
 // Resizes ArrayBars to ArrayContainer
 let arrayBarWidth = ((window.innerWidth - 200) / (ARRAY_SIZE)) - .5;
 
-// This is the main color of the array bars
-const DEFAULT_COLOR = 'pink';
-
-// This is the color of array bars that are being compared throughout the animations
-const COMPARISON_COLOR = 'turquoise';
-
-// This is the color of array bars that are being swapped throughout the animations
-const SWAP_COLOR = 'blueviolet';
-
-const PIVOT_COLOR = 'firebrick';
-
-// This is the final color of the array bars when they won't be compared or swapped again.
-const FINAL_COLOR = 'yellowgreen';
+// Array bar color constants:
+const DEFAULT_COLOR = 'pink';			// Used by all sort functions
+const COMPARISON_COLOR = 'turquoise';	// Used by all sort functions
+const SWAP_COLOR = 'blueviolet';		// Used by BubbleSort, QuickSort
+const PIVOT_COLOR = 'firebrick';		// Used by QuickSort
+const FINAL_COLOR = 'yellowgreen';		// Used by all sort functions
 
 
 export default class ArrayContainer extends React.Component {
@@ -83,6 +74,7 @@ export default class ArrayContainer extends React.Component {
 
 	// Generates new array
 	generateArray() {
+		//window.location.reload();
 		const array = [];
 		const width = arrayContainerWidth;
 		for (let i = 0; i < ARRAY_SIZE; i++) {
@@ -105,7 +97,7 @@ export default class ArrayContainer extends React.Component {
 
 	// Creates element 'i' of this.state.array as a JSON object
 	createArrayElement(i) {
-		return {"id": i,
+		return {"id"   : i,
 		  		"value": randomIntFromInterval(ARRAY_MIN, ARRAY_MAX),
 		  		"color": DEFAULT_COLOR,
 		  		"pivot": false,

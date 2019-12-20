@@ -1,10 +1,12 @@
+// This function takes an array as argument, and returns the compare and swap sequence
+// of BubbleSort being performed on the array. The sequence can then be used to animate
+// and visualize every step of the sort.
 export default function getBubbleSortSequence (array) {
-	// sequence elements will be of the form: ["operation", idx1, idx2]
-	// where operation can be compare or swap or final_swap
+	// Sequence elements will be of the form: ["operation", idx1, idx2]
+	// where operation can be compare or swap or final
 	var sequence = [];
-
+	
 	bubbleSort(array, sequence);
-
 	return sequence;
 }
 
@@ -19,9 +21,7 @@ function bubbleSort (array, sequence) {
             	sequence.push(["swap", j, j+1]); // inside the if block - j and j+1 are swapped
 
                 // Swap the numbers
-                var tmp = array[j];
-                array[j] = array[j+1];
-                array[j+1] = tmp;
+                swap(array, j, j+1);
             }
 
             // Lets visualizer know that array bar has reached final position in sequence
@@ -33,4 +33,12 @@ function bubbleSort (array, sequence) {
 
     // At the end of bubblesort, index 0 automatically has the lowest element
     sequence.push(["final",0,-1]);
+}
+
+// Swaps elements at two indices of a given array
+function swap(array, i, j) {
+	var swapper = array[i];
+	array[i] = array[j];
+	array[j] = swapper;
+	return;
 }

@@ -1,10 +1,12 @@
-// Added FINAL state logic
-// TODO: Re-factor, re-comment
-
+// This function takes an array as argument, and returns the compare and swap sequence
+// of MergeSort being performed on the array. The sequence can then be used to animate
+// and visualize every step of the sort.
 export default function getMergeSortSequence(array) {
+  // Sequence elements will be of the form: ["operation", idx1, idx2]
+  // where operation can be compare or overwrite or final
   const sequence = [];
-  if (array.length <= 1) return array;
   const auxiliaryArray = array.slice();
+
   mergeSortHelper(array, 0, array.length - 1, auxiliaryArray, sequence, array.length);
   return sequence;
 }
@@ -17,10 +19,16 @@ function mergeSortHelper(
   sequence,
   originalArrayLength,
 ) {
-  if (startIdx === endIdx) return;
-  const middleIdx = Math.floor((startIdx + endIdx) / 2);
+  if (startIdx === endIdx) return;  // Base case
+  const middleIdx = Math.floor((startIdx + endIdx) / 2);  // Middle index of current array
+
+  // Recursively call first half of array
   mergeSortHelper(auxiliaryArray, startIdx, middleIdx, mainArray, sequence);
+
+  // Recursively call second half of array
   mergeSortHelper(auxiliaryArray, middleIdx + 1, endIdx, mainArray, sequence);
+
+  // Merge the two halves
   doMerge(mainArray, startIdx, middleIdx, endIdx, auxiliaryArray, sequence, originalArrayLength);
 }
 
