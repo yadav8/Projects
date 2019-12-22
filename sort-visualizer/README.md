@@ -15,7 +15,7 @@ Although the various sorting algorithms presented their own challenges, they all
 
 The algorithm records whenever two elements are being compared, swapped, when an element reaches its final position and some other such operations which vary with each algorithm.
 
-###For example: Quick Sort
+### For example: Quick Sort
 
 Quick sort works by choosing a Pivot element in the array, and moving all elements lesser than the pivot to its left (in an ascending sort), and all elements greater to its right. <br />It then recursively calls Quick sort onto the partitioned left and right arrays - until the entire array is sorted.
 
