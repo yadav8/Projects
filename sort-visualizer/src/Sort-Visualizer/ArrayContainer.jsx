@@ -1,4 +1,5 @@
 import React from 'react';
+import {ArraySizeSlider} from './ArraySizeSlider.jsx';
 //import update from 'immutability-helper';
 
 import './Sort-Visualizer.css';
@@ -25,21 +26,24 @@ sequence execution.
 // TODO: Make these user-configurable
 
 // Change this value for the speed of the animations.
-const ANIMATION_SPEED_MS = 250;
+const ANIMATION_SPEED_MS = 5;
 
 // Change this value for the number of bars (value) in the array.
-const ARRAY_SIZE = 20;
+export const DEFAULT_ARRAY_SIZE = 150;
 
 // Array min and max possible values
-const ARRAY_MIN = 1;
-const ARRAY_MAX = 700;
+export const DEFAULT_ARRAY_MIN_VALUE = 1;
+export const DEFAULT_ARRAY_MAX_VALUE = 700;
 // *************************************************** //
 
 // Resizes to fit browser window
 let arrayContainerWidth = window.innerWidth - 200;
 
+// Global array size variable
+let arraySize = DEFAULT_ARRAY_SIZE;
+
 // Resizes ArrayBars to ArrayContainer
-let arrayBarWidth = ((window.innerWidth - 200) / (ARRAY_SIZE)) - .5;
+let arrayBarWidth = ((window.innerWidth - 200) / (arraySize)) - .5;
 
 // Array bar color constants:
 const DEFAULT_COLOR = 'pink';			// Used by all sort functions
@@ -63,12 +67,12 @@ export default class ArrayContainer extends React.Component {
   	// Adds event listener to handle window resizing
 	componentDidMount() {
 		this.generateArray();
-		window.addEventListener('resize', () => this.handleResize());
+		window.addEventListener('resize', () => this.handleWindowResize());
 	}
 
 	// Removes any added event listeners
 	componentWillUnmount() {
-		window.removeEventListener('resize', () => this.handleResize());
+		window.removeEventListener('resize', () => this.handleWindowResize());
 	}
 
 
@@ -77,7 +81,7 @@ export default class ArrayContainer extends React.Component {
 		//window.location.reload();
 		const array = [];
 		const width = arrayContainerWidth;
-		for (let i = 0; i < ARRAY_SIZE; i++) {
+		for (let i = 0; i < arraySize; i++) {
 			array.push(this.createArrayElement(i));
 		}		
 		this.setState({array, width});
@@ -98,22 +102,55 @@ export default class ArrayContainer extends React.Component {
 	// Creates element 'i' of this.state.array as a JSON object
 	createArrayElement(i) {
 		return {"id"   : i,
-		  		"value": randomIntFromInterval(ARRAY_MIN, ARRAY_MAX),
+		  		"value": randomIntFromInterval(DEFAULT_ARRAY_MIN_VALUE, DEFAULT_ARRAY_MAX_VALUE),
 		  		"color": DEFAULT_COLOR,
 		  		"pivot": false,
 		  		"final": false};
 	}
 
 	// Handles updating Component dimensions on window resize
-	handleResize() {
+	handleWindowResize() {
 		arrayContainerWidth = window.innerWidth - 200;
-		arrayBarWidth = ((window.innerWidth - 200) / (ARRAY_SIZE)) - .5;
+		arrayBarWidth = ((window.innerWidth - 200) / (arraySize)) - .5;
 		this.setState({width: arrayContainerWidth});
 	}
+
+	
+	getArraySize(arraySizeFromSlider) {
+		arraySize = arraySizeFromSlider;
+		arrayBarWidth = ((window.innerWidth - 200) / (arraySize)) - .5;
+		this.generateArray();
+	}
+
 
 	// Extracts the actual array value from this.state.array to send to Sorting Algorithms
 	getValueArray() {
 		return this.state.array.map(arrayElement => arrayElement.value);
+	}
+
+
+	render() {
+		const array = this.state.array;
+		const width = this.state.width;
+
+	    return (
+	    	<div className = "ArrayContainer" style={{width: width,}}>
+		    	{array.map((arrayElement) => (
+					<ArrayBar
+						key = {arrayElement.id}
+						value = {arrayElement.value}
+						color = {arrayElement.color}
+						width = {arrayBarWidth}
+					/>
+			    ))}
+			    <br/>
+			    <button onClick={() => this.generateArray()}>Generate new array!</button>
+			    <button onClick={() => this.bubbleSortButtonPressed()}>Bubble Sort</button>
+			    <button onClick={() => this.mergeSortButtonPressed()}>Merge Sort</button>
+			    <button onClick={() => this.quickSortButtonPressed()}>Quick Sort</button>
+			    <ArraySizeSlider sendArraySize={(s) => this.getArraySize(s)}></ArraySizeSlider>
+		    </div>
+	    );
 	}
 
 	// Function call when Bubble Sort button is pressed
@@ -311,29 +348,6 @@ export default class ArrayContainer extends React.Component {
 		}, frameNumber * ANIMATION_SPEED_MS);
 	}
 
-
-	render() {
-		const array = this.state.array;
-		const width = this.state.width;
-
-	    return (
-	    	<div className = "ArrayContainer" style={{width: width,}}>
-		    	{array.map((arrayElement) => (
-					<ArrayBar
-						key = {arrayElement.id}
-						value = {arrayElement.value}
-						color = {arrayElement.color}
-						width = {arrayBarWidth}
-					/>
-			    ))}
-			    <br/>
-			    <button onClick={() => this.generateArray()}>Generate new array!</button>
-			    <button onClick={() => this.bubbleSortButtonPressed()}>Bubble Sort</button>
-			    <button onClick={() => this.mergeSortButtonPressed()}>Merge Sort</button>
-			    <button onClick={() => this.quickSortButtonPressed()}>Quick Sort</button>
-		    </div>
-	    );
-	}
 }
 
 // Optimizes animation by not reverting to DEFAULT color if the same index is about 
