@@ -1,6 +1,7 @@
 import React from 'react';
 import Slider from 'react-rangeslider';
 import 'react-rangeslider/lib/index.css';
+import './Sort-Visualizer.css';
 import {DEFAULT_ARRAY_SIZE} from './ArrayContainer.jsx';
 
 const MIN_ARRAY_SIZE = 2;
@@ -29,7 +30,7 @@ export class ArraySizeSlider extends React.Component {
 		}
 
 		return (
-			<div className = 'array-size-slider'
+			<div className = 'ArraySizeSlider'
 				 style = {{
 				 	width: `200px`,
 				 }}

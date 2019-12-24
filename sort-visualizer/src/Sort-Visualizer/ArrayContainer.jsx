@@ -37,13 +37,13 @@ export const DEFAULT_ARRAY_MAX_VALUE = 700;
 // *************************************************** //
 
 // Resizes to fit browser window
-let arrayContainerWidth = window.innerWidth - 200;
+let arrayContainerWidth = window.innerWidth - 300;
 
 // Global array size variable
 let arraySize = DEFAULT_ARRAY_SIZE;
 
 // Resizes ArrayBars to ArrayContainer
-let arrayBarWidth = ((window.innerWidth - 200) / (arraySize)) - .5;
+let arrayBarWidth = (arrayContainerWidth / (arraySize)) - .5;
 
 // Array bar color constants:
 const DEFAULT_COLOR = 'pink';			// Used by all sort functions
@@ -104,21 +104,22 @@ export default class ArrayContainer extends React.Component {
 		return {"id"   : i,
 		  		"value": randomIntFromInterval(DEFAULT_ARRAY_MIN_VALUE, DEFAULT_ARRAY_MAX_VALUE),
 		  		"color": DEFAULT_COLOR,
+		  		"width": arrayBarWidth,
 		  		"pivot": false,
 		  		"final": false};
 	}
 
 	// Handles updating Component dimensions on window resize
 	handleWindowResize() {
-		arrayContainerWidth = window.innerWidth - 200;
-		arrayBarWidth = ((window.innerWidth - 200) / (arraySize)) - .5;
+		arrayContainerWidth = window.innerWidth - 300;
+		arrayBarWidth = (arrayContainerWidth / (arraySize)) - .5;
 		this.setState({width: arrayContainerWidth});
 	}
 
 	
 	getArraySize(arraySizeFromSlider) {
 		arraySize = arraySizeFromSlider;
-		arrayBarWidth = ((window.innerWidth - 200) / (arraySize)) - .5;
+		arrayBarWidth = (arrayContainerWidth / (arraySize)) - .5;
 		this.generateArray();
 	}
 
@@ -135,12 +136,13 @@ export default class ArrayContainer extends React.Component {
 
 	    return (
 	    	<div className = "ArrayContainer" style={{width: width,}}>
+	    		<ArraySizeSlider sendArraySize={(s) => this.getArraySize(s)}></ArraySizeSlider>
 		    	{array.map((arrayElement) => (
 					<ArrayBar
 						key = {arrayElement.id}
 						value = {arrayElement.value}
 						color = {arrayElement.color}
-						width = {arrayBarWidth}
+						width = {arrayElement.width}
 					/>
 			    ))}
 			    <br/>
@@ -148,7 +150,6 @@ export default class ArrayContainer extends React.Component {
 			    <button onClick={() => this.bubbleSortButtonPressed()}>Bubble Sort</button>
 			    <button onClick={() => this.mergeSortButtonPressed()}>Merge Sort</button>
 			    <button onClick={() => this.quickSortButtonPressed()}>Quick Sort</button>
-			    <ArraySizeSlider sendArraySize={(s) => this.getArraySize(s)}></ArraySizeSlider>
 		    </div>
 	    );
 	}
