@@ -9,11 +9,10 @@ const MAX_ANIMATION_SPEED = 1000;
 export default class AnimationSpeedSlider extends React.Component {
 	constructor(props) {
 		super(props);
-
-		this.moving = false;
 	
 		this.state = {
-			animation_speed: this.props.animation_speed
+			animation_speed: this.props.animation_speed,
+			moving: false
 		}
 	}
 
@@ -24,9 +23,10 @@ export default class AnimationSpeedSlider extends React.Component {
 	}
 
 	handleDrag() {
-		//this.moving = this.moving ^ true;
-		this.moving = false;
+		let moving_new = this.state.moving ^ true;
+		this.setState({moving: moving_new});
 	}
+
 
 	render() {
 		const {animation_speed} = this.state;
@@ -36,76 +36,82 @@ export default class AnimationSpeedSlider extends React.Component {
 		}
 		//0 - 180, 1-1000
 		const textLoc = ((animation_speed * 165)+5000) / 1000;
+		const text = (this.state.moving ? '' : this.props.animation_speed);
 
-		if(!this.moving) {
-			return <WhileStationary
-						textLoc={textLoc}
-						animation_speed={animation_speed}
-						labels={labels}
-						onChange={(value) => this.handleOnChange(value)}
-						onChangeStart={() => this.handleDrag()}
-						onChangeComplete={() => this.handleDrag()}
-					/> 
-		} else {
-			return <WhileMoving
-						animation_speed={animation_speed}
-						labels={labels}
-						onChange={(value) => this.handleOnChange(value)}
-						onChangeStart={() => this.handleDrag()}
-						onChangeComplete={() => this.handleDrag()}
-					/>	
-		}
+		return (
+				<div className = 'AnimationSpeedSlider'
+					 style = {{
+					 	width: `200px`,
+					 }}
+				>
+					<span style={{
+						color: 'red',
+						position: 'absolute',
+						left: `${textLoc}px`,
+						bottom: `45px`,
+					}}>{text}</span>
+					<Slider
+						value = {animation_speed}
+						min = {MIN_ANIMATION_SPEED}
+						max = {MAX_ANIMATION_SPEED}
+						labels = {labels}
+						onChange = {(value) => this.handleOnChange(value)}
+						onChangeStart = {() => this.handleDrag()}
+						onChangeComplete = {() => this.handleDrag()}
+					/>
+				</div>
+			) 
 	}
 	 
 }
 
 // Conditional Rendering
-function WhileStationary(props) {
+// function WhileStationary(props) {
 
-	return (
-		<div className = 'AnimationSpeedSlider'
-			 style = {{
-			 	width: `200px`,
-			 }}
-		>
-			<span style={{
-				color: 'red',
-				position: 'absolute',
-				left: `${props.textLoc}px`,
-				bottom: `45px`,
-			}}>{props.animation_speed}</span>
-			<Slider
-				value = {props.animation_speed}
-				min = {MIN_ANIMATION_SPEED}
-				max = {MAX_ANIMATION_SPEED}
-				labels = {props.labels}
-				onChange = {props.onChange}
-				onChangeStart = {props.onChangeStart}
-				onChangeComplete = {props.onChangeComplete}
-			/>
-		</div>
-	)
+// 	return (
+// 		<div className = 'AnimationSpeedSlider'
+// 			 style = {{
+// 			 	width: `200px`,
+// 			 }}
+// 		>
+// 			<span style={{
+// 				color: 'red',
+// 				position: 'absolute',
+// 				left: `${props.textLoc}px`,
+// 				bottom: `45px`,
+// 			}}>{props.text}</span>
+// 			<Slider
+// 				value = {props.animation_speed}
+// 				min = {MIN_ANIMATION_SPEED}
+// 				max = {MAX_ANIMATION_SPEED}
+// 				labels = {props.labels}
+// 				onChange = {props.onChange}
+// 				onChangeStart = {props.onChangeStart}
+// 				onChangeComplete = {props.onChangeComplete}
+// 			/>
+// 		</div>
+// 	)
 
-}
+// }
 
-function WhileMoving(props) {
+// function WhileMoving(props) {
 
-	return (
-		<div className = 'AnimationSpeedSlider'
-			 style = {{
-			 	width: `200px`,
-			 }}
-		>
-			<Slider
-				value = {props.animation_speed}
-				min = {MIN_ANIMATION_SPEED}
-				max = {MAX_ANIMATION_SPEED}
-				labels = {props.labels}
-				onChange = {props.onChange}
-				onChangeStart = {props.onChangeStart}
-				onChangeComplete = {props.onChangeComplete}
-			/>
-		</div>
-	)
+// 	return (
+// 		<div className = 'AnimationSpeedSlider'
+// 			 style = {{
+// 			 	width: `200px`,
+// 			 }}
+// 		>
+// 			<Slider
+// 				value = {props.animation_speed}
+// 				min = {MIN_ANIMATION_SPEED}
+// 				max = {MAX_ANIMATION_SPEED}
+// 				labels = {props.labels}
+// 				onChange = {props.onChange}
+// 				onChangeStart = {props.onChangeStart}
+// 				onChangeComplete = {props.onChangeComplete}
+// 			/>
+// 		</div>
+// 	)
 
-}
+// }
