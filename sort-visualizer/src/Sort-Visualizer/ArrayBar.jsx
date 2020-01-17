@@ -15,26 +15,29 @@ export default class ArrayBar extends React.PureComponent {
 		super(props);
 		
 		this.state = {
-			value: this.props.value,
-			color: this.props.color,
-			width: this.props.width,
+			// value: this.props.value,
+			// color: this.props.color,
+			// width: this.props.width,
 		};
 		
 	}
 
-	// ArrayBars always change state syncronously with props changes from ArrayContainer
-	static getDerivedStateFromProps(props, state) {
-		state = {
-					value: props.value,
-					color: props.color,
-					width: props.width,
-				};
+	// // ArrayBars always change state syncronously with props changes from ArrayContainer
+	// static getDerivedStateFromProps(props, state) {
+	// 	state = {
+	// 				value: props.value,
+	// 				color: props.color,
+	// 				width: props.width,
+	// 			};
 
-		return state;
-	}
+	// 	return state;
+	// }
 
 	render() {
-		const {value, color, width} = this.state;
+		//const {value, color, width} = this.state;
+		const value = this.props.value;
+		const color = this.props.color;
+		const width = this.props.width;
 		const height = value * VERT_SCALING_FACTOR;
 
 		return (

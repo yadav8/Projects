@@ -1,6 +1,3 @@
-/*
-Calculate array width and indenting from browser window BOM?
-*/
 
 .ArrayContainer {
 	position: absolute;
@@ -13,7 +10,23 @@ Calculate array width and indenting from browser window BOM?
 	margin: 0 0.25px;
 }
 
+.Toolbar {
+	position: absolute;
+	left: 0px;
+	bottom: 100px;
+	width: 210px;
+}
+
 .ArraySizeSlider {
 	position: absolute;
 	left: 10px;
+	bottom: 100px;
 }
+
+
+.AnimationSpeedSlider {
+	position: absolute;
+	left: 10px;
+	bottom: -30px;
+}
+

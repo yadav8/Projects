@@ -16,21 +16,27 @@ function quickSort(array, sequence, leftIdx, rightIdx) {
 		// Final index of pivot element returned from partition
 		var pivotIdx = partition(array, sequence, leftIdx, rightIdx);
 
-		// Only one element on the left side of the pivot. Already in it's final position.
-		if (pivotIdx - 1 === leftIdx) {sequence.push(["final", leftIdx, 1]);}
 
 		// Only one element on the right side of the pivot. Already in it's final position.
 		if (pivotIdx + 1 === rightIdx) {sequence.push(["final", rightIdx, 1]);}
+
+		// Only one element on the left side of the pivot. Already in it's final position.
+		if (pivotIdx - 1 === leftIdx) {sequence.push(["final", leftIdx, 1]);}
+
+		
+
+
+		// More than one element on the right side of the pivot
+		if (pivotIdx + 1 < rightIdx) {
+		    quickSort(array, sequence, pivotIdx + 1, rightIdx);
+		}
 		
 		// More than one element on the left side of the pivot
 		if (leftIdx < pivotIdx - 1) { 
 		    quickSort(array, sequence, leftIdx, pivotIdx - 1);
 		}
 
-		// More than one element on the right side of the pivot
-		if (pivotIdx + 1 < rightIdx) {
-		    quickSort(array, sequence, pivotIdx + 1, rightIdx);
-		}
+		
 		
 	}
 

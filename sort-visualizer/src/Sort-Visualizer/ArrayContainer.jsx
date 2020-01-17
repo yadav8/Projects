@@ -1,5 +1,4 @@
 import React from 'react';
-import {ArraySizeSlider} from './ArraySizeSlider.jsx';
 //import update from 'immutability-helper';
 
 import './Sort-Visualizer.css';
@@ -25,25 +24,15 @@ sequence execution.
 // *************************************************** //
 // TODO: Make these user-configurable
 
-// Change this value for the speed of the animations.
-const ANIMATION_SPEED_MS = 5;
+let date = new Date();
 
-// Change this value for the number of bars (value) in the array.
-export const DEFAULT_ARRAY_SIZE = 150;
 
 // Array min and max possible values
 export const DEFAULT_ARRAY_MIN_VALUE = 1;
 export const DEFAULT_ARRAY_MAX_VALUE = 700;
 // *************************************************** //
 
-// Resizes to fit browser window
-let arrayContainerWidth = window.innerWidth - 300;
 
-// Global array size variable
-let arraySize = DEFAULT_ARRAY_SIZE;
-
-// Resizes ArrayBars to ArrayContainer
-let arrayBarWidth = (arrayContainerWidth / (arraySize)) - .5;
 
 // Array bar color constants:
 const DEFAULT_COLOR = 'pink';			// Used by all sort functions
@@ -57,9 +46,14 @@ export default class ArrayContainer extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.arrayContainerWidth = window.innerWidth - 300;	// Resizes to fit browser window
+		this.arraySize = this.props.settings.array_size;	// Array size variable - changes with props
+		this.arrayBarWidth = (this.arrayContainerWidth / (this.arraySize)) - .5; //Formula for array bar width
+		this.animation_speed_ms = this.props.settings.animation_speed;	// Animation speed variable - changes with props	
+
 		this.state = {
 		  array: [],	// Array of JSON objects  
-		  width: arrayContainerWidth,
+		  width: this.arrayContainerWidth,
 		};
 	}
 
@@ -76,12 +70,25 @@ export default class ArrayContainer extends React.Component {
 	}
 
 
+	componentDidUpdate() {
+		//console.log(date.getTime());
+		if (date.getTime()%1===0 && this.props.settings.array_size !== this.arraySize) {
+			this.arraySize = this.props.settings.array_size;
+			this.arrayBarWidth = (this.arrayContainerWidth / (this.arraySize)) - .5;
+			this.generateArray();
+		}
+
+		this.animation_speed_ms = this.props.settings.animation_speed;
+		
+	}
+
+
 	// Generates new array
 	generateArray() {
 		//window.location.reload();
 		const array = [];
-		const width = arrayContainerWidth;
-		for (let i = 0; i < arraySize; i++) {
+		const width = this.arrayContainerWidth;
+		for (let i = 0; i < this.arraySize; i++) {
 			array.push(this.createArrayElement(i));
 		}		
 		this.setState({array, width});
@@ -104,23 +111,16 @@ export default class ArrayContainer extends React.Component {
 		return {"id"   : i,
 		  		"value": randomIntFromInterval(DEFAULT_ARRAY_MIN_VALUE, DEFAULT_ARRAY_MAX_VALUE),
 		  		"color": DEFAULT_COLOR,
-		  		"width": arrayBarWidth,
+		  		"width": this.arrayBarWidth,
 		  		"pivot": false,
 		  		"final": false};
 	}
 
 	// Handles updating Component dimensions on window resize
 	handleWindowResize() {
-		arrayContainerWidth = window.innerWidth - 300;
-		arrayBarWidth = (arrayContainerWidth / (arraySize)) - .5;
-		this.setState({width: arrayContainerWidth});
-	}
-
-	
-	getArraySize(arraySizeFromSlider) {
-		arraySize = arraySizeFromSlider;
-		arrayBarWidth = (arrayContainerWidth / (arraySize)) - .5;
-		this.generateArray();
+		this.arrayContainerWidth = window.innerWidth - 300;
+		this.arrayBarWidth = (this.arrayContainerWidth / (this.arraySize)) - .5;
+		this.setState({width: this.arrayContainerWidth});
 	}
 
 
@@ -136,10 +136,10 @@ export default class ArrayContainer extends React.Component {
 
 	    return (
 	    	<div className = "ArrayContainer" style={{width: width,}}>
-	    		<ArraySizeSlider sendArraySize={(s) => this.getArraySize(s)}></ArraySizeSlider>
 		    	{array.map((arrayElement) => (
 					<ArrayBar
 						key = {arrayElement.id}
+						id = {arrayElement.id}
 						value = {arrayElement.value}
 						color = {arrayElement.color}
 						width = {arrayElement.width}
@@ -203,10 +203,10 @@ export default class ArrayContainer extends React.Component {
 				//FOR FUNCTIONAL SETSTATE:
 				// setTimeout(() => {
 				// 	this.setState(sequenceCompare1(array_copy, array_i, array_j, i, revertToDefault));
-				// }, i * ANIMATION_SPEED_MS);
+				// }, i * this.animation_speed_ms);
 				// setTimeout(() => {
 				// 	this.setState(sequenceCompare2(array_copy, array_i, array_j, i, revertToDefault));
-				// }, (i+1) * ANIMATION_SPEED_MS);
+				// }, (i+1) * this.animation_speed_ms);
 			}
 			else if (sequence_function === "swap") {		
 				this.sequenceSwap(array_copy, array_i, array_j, i, revertToDefault);				
@@ -231,7 +231,7 @@ export default class ArrayContainer extends React.Component {
 			if (!array[i].pivot) {array[i].color = COMPARISON_COLOR;}
 			if (!array[j].pivot) {array[j].color = COMPARISON_COLOR;}
 			this.setState(state => ({array: array}));
-		}, frameNumber * ANIMATION_SPEED_MS);
+		}, frameNumber * this.animation_speed_ms);
 
 		// Optimizes animation by not reverting to DEFAULT color if the same index is about 
 		// to get some other color state in the very next frame. Otherwise, we revert to default
@@ -247,7 +247,7 @@ export default class ArrayContainer extends React.Component {
 			else if (array[j].pivot === true) {array[j].color = PIVOT_COLOR;}
 			else if (revertToDefault[1]) {array[j].color = DEFAULT_COLOR;}
 			this.setState(state => ({array: array}));
-		}, (frameNumber+1) * ANIMATION_SPEED_MS);
+		}, (frameNumber+1) * this.animation_speed_ms);
 	}
 
 
@@ -261,7 +261,7 @@ export default class ArrayContainer extends React.Component {
 			array[j].value = swapper;
 			array[j].color = SWAP_COLOR;					
 			this.setState(state => ({array: array}));
-		}, frameNumber * ANIMATION_SPEED_MS); 
+		}, frameNumber * this.animation_speed_ms); 
 
 		// Optimizes animation by not reverting to DEFAULT color if the same index is about 
 		// to get some other color state in the very next frame. Otherwise, we revert to default
@@ -275,7 +275,7 @@ export default class ArrayContainer extends React.Component {
 			else if (array[j].pivot === true) {array[j].color = PIVOT_COLOR;}
 			else if (revertToDefault[1]) {array[j].color = DEFAULT_COLOR;}					
 			this.setState(state => ({array: array}));
-		}, (frameNumber+1) * ANIMATION_SPEED_MS);	
+		}, (frameNumber+1) * this.animation_speed_ms);	
 	}
 
 
@@ -288,7 +288,7 @@ export default class ArrayContainer extends React.Component {
 				array[i].color = SWAP_COLOR;
 			}	
 			this.setState(state => ({array: array}));
-		}, frameNumber * ANIMATION_SPEED_MS);
+		}, frameNumber * this.animation_speed_ms);
 
 		// Optimizes animation by not reverting to DEFAULT color if the same index is about 
 		// to get some other color state in the very next frame. Otherwise, we revert to default
@@ -296,7 +296,7 @@ export default class ArrayContainer extends React.Component {
 		setTimeout(() => {			
 			if (revertToDefault[0]) {array[i].color = DEFAULT_COLOR;}
 			this.setState(state => ({array: array}));
-		}, (frameNumber+1) * ANIMATION_SPEED_MS);
+		}, (frameNumber+1) * this.animation_speed_ms);
 	}
 
 
@@ -311,7 +311,7 @@ export default class ArrayContainer extends React.Component {
 				array[i].color = PIVOT_COLOR;
 				array[i].pivot = true;	// Set PIVOT color state for array index
 				this.setState(state => ({array: array}));
-			}, frameNumber * ANIMATION_SPEED_MS);
+			}, frameNumber * this.animation_speed_ms);
 
 		}
 
@@ -321,7 +321,7 @@ export default class ArrayContainer extends React.Component {
 				array[i].color = DEFAULT_COLOR;
 				array[i].pivot = false;	// Reset PIVOT color state for array index
 				this.setState(state => ({array: array}));
-			}, frameNumber * ANIMATION_SPEED_MS);
+			}, frameNumber * this.animation_speed_ms);
 		}
 
 		// Moving pivots
@@ -335,7 +335,7 @@ export default class ArrayContainer extends React.Component {
 				array[pivot].color = PIVOT_COLOR;
 				array[pivot].pivot = true;
 				this.setState(state => ({array: array}));
-			}, frameNumber * ANIMATION_SPEED_MS);
+			}, frameNumber * this.animation_speed_ms);
 		}
 	}
 
@@ -346,7 +346,7 @@ export default class ArrayContainer extends React.Component {
 			array[i].color = FINAL_COLOR;
 			array[i].final = true;	// Set FINAL color state for array index
 			this.setState(state => ({array: array}));
-		}, frameNumber * ANIMATION_SPEED_MS);
+		}, frameNumber * this.animation_speed_ms);
 	}
 
 }
@@ -392,7 +392,7 @@ TEST CODE BELOW FOR EXPERIMENTAL ALTERNATIVE IMPLEMENTATIONS:
 // 		array[i][1] = COMPARISON_COLOR;
 // 		array[j][1] = COMPARISON_COLOR;
 // 		return({array: array});
-// 	//}, frameNumber * ANIMATION_SPEED_MS);
+// 	//}, frameNumber * this.animation_speed_ms);
 // }
 
 // 	// Optimizes animation by not reverting to DEFAULT color if the same index is about 
@@ -407,7 +407,7 @@ TEST CODE BELOW FOR EXPERIMENTAL ALTERNATIVE IMPLEMENTATIONS:
 // 		if (array[j][2]) {array[j][1] = FINAL_COLOR;}
 // 		else if (revertToDefault[1]) {array[j][1] = DEFAULT_COLOR;}
 // 		return({array: array});
-// 	//}, (frameNumber+1) * ANIMATION_SPEED_MS);
+// 	//}, (frameNumber+1) * this.animation_speed_ms);
 // }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
