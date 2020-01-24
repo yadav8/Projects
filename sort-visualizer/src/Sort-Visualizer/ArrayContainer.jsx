@@ -186,6 +186,11 @@ export default class ArrayContainer extends React.Component {
 	// Heap Sort: compare, swap, final (TODO)
 	executeSequence(sequence) {
 		let array_copy = [...this.state.array];
+		
+		// Disable the toolbar for the duration of the sort, then re-enable
+		this.props.disableToolbar(true);
+		setTimeout(() => {this.props.disableToolbar(false);}, sequence.length * this.animation_speed_ms);
+
 		for (let i = 0; i < sequence.length; i++) {
 			// Our sequence is an array of 'frames', where each frame looks like this:
 			// ['sequence_function', index_1, index_2]

@@ -16,6 +16,12 @@ export default class AnimationSpeedSlider extends React.Component {
 		}
 	}
 
+	componentDidUpdate() {
+		if (this.props.overwrite && this.props.overwrite_val!==this.state.animation_speed) {
+			this.setState({animation_speed: this.props.overwrite_val});
+		}
+	}
+
 	handleOnChange(value) {
 		if(value === this.state.animation_speed) {return;}
 		this.setState({animation_speed: value});
@@ -30,88 +36,30 @@ export default class AnimationSpeedSlider extends React.Component {
 
 	render() {
 		const {animation_speed} = this.state;
-		const labels = {
-			[MIN_ANIMATION_SPEED]: [MIN_ANIMATION_SPEED],
-			[MAX_ANIMATION_SPEED]: [MAX_ANIMATION_SPEED]
-		}
-		//0 - 180, 1-1000
+		
 		const textLoc = ((animation_speed * 165)+5000) / 1000;
-		const text = (this.state.moving ? '' : this.props.animation_speed);
+		const text = (this.state.moving ? '' : animation_speed);
 
 		return (
-				<div className = 'AnimationSpeedSlider'
-					 style = {{
+				<div style = {{
+					 	position: 'absolute',
+					 	left: `${this.props.left}px`,
+					 	top: `${this.props.top}px`,
 					 	width: `200px`,
-					 }}
-				>
-					<span style={{
-						color: 'red',
-						position: 'absolute',
-						left: `${textLoc}px`,
-						bottom: `45px`,
-					}}>{text}</span>
+					 }}>
+					<span className = "SliderValueLabel" style={{left: `${textLoc}px`,}}>{text}</span>
 					<Slider
 						value = {animation_speed}
 						min = {MIN_ANIMATION_SPEED}
 						max = {MAX_ANIMATION_SPEED}
-						labels = {labels}
 						onChange = {(value) => this.handleOnChange(value)}
 						onChangeStart = {() => this.handleDrag()}
 						onChangeComplete = {() => this.handleDrag()}
 					/>
+					<span className = "SliderLeftLabel">{MIN_ANIMATION_SPEED}</span>
+					<span className = "SliderRightLabel">{MAX_ANIMATION_SPEED}</span>
 				</div>
 			) 
 	}
 	 
 }
-
-// Conditional Rendering
-// function WhileStationary(props) {
-
-// 	return (
-// 		<div className = 'AnimationSpeedSlider'
-// 			 style = {{
-// 			 	width: `200px`,
-// 			 }}
-// 		>
-// 			<span style={{
-// 				color: 'red',
-// 				position: 'absolute',
-// 				left: `${props.textLoc}px`,
-// 				bottom: `45px`,
-// 			}}>{props.text}</span>
-// 			<Slider
-// 				value = {props.animation_speed}
-// 				min = {MIN_ANIMATION_SPEED}
-// 				max = {MAX_ANIMATION_SPEED}
-// 				labels = {props.labels}
-// 				onChange = {props.onChange}
-// 				onChangeStart = {props.onChangeStart}
-// 				onChangeComplete = {props.onChangeComplete}
-// 			/>
-// 		</div>
-// 	)
-
-// }
-
-// function WhileMoving(props) {
-
-// 	return (
-// 		<div className = 'AnimationSpeedSlider'
-// 			 style = {{
-// 			 	width: `200px`,
-// 			 }}
-// 		>
-// 			<Slider
-// 				value = {props.animation_speed}
-// 				min = {MIN_ANIMATION_SPEED}
-// 				max = {MAX_ANIMATION_SPEED}
-// 				labels = {props.labels}
-// 				onChange = {props.onChange}
-// 				onChangeStart = {props.onChangeStart}
-// 				onChangeComplete = {props.onChangeComplete}
-// 			/>
-// 		</div>
-// 	)
-
-// }

@@ -11,7 +11,8 @@ export default class ArraySizeSlider extends React.Component {
 		super(props);
 	
 		this.state = {
-			array_size: this.props.array_size
+			array_size: this.props.array_size,
+			moving: false
 		}
 	}
 
@@ -27,37 +28,36 @@ export default class ArraySizeSlider extends React.Component {
 		this.props.sendArraySize(this.state.array_size);
 	}
 
+	handleDrag() {
+		let moving_new = this.state.moving ^ true;
+		this.setState({moving: moving_new});
+	}
+
 	render() {
 		const {array_size} = this.state;
-		const labels = {
-			[MIN_ARRAY_SIZE]: [MIN_ARRAY_SIZE],
-			[MAX_ARRAY_SIZE]: [MAX_ARRAY_SIZE]
-		}
 
-		//console.log(array_size);
-
-		//0 - 180, 2-500
-		const textLoc = ((array_size * 165)+2500) / 500;
+		// Formula to keep a slider value text above the slider position
+		const textLoc = ((array_size * 165 )+2500) / 500;
+		const text = (this.state.moving ? '' : array_size);
 
 		return (
-			<div className = 'ArraySizeSlider'
-				 style = {{
+			<div style = {{
+				 	position: 'absolute',
+				 	left: `${this.props.left}px`,
+				 	top: `${this.props.top}px`,
 				 	width: `200px`,
-				 }}
-			>
-				<span style={{
-					color: 'red',
-					position: 'absolute',
-					left: `${textLoc}px`,
-					bottom: `45px`,
-				}}>{array_size}</span>
+				}}>
+				<span className = "SliderValueLabel" style={{left: `${textLoc}px`,}}>{text}</span>
 				<Slider
 					value = {array_size}
 					min = {MIN_ARRAY_SIZE}
 					max = {MAX_ARRAY_SIZE}
-					labels = {labels}
 					onChange = {(value) => this.handleOnChange(value)}
+					onChangeStart = {() => this.handleDrag()}
+					onChangeComplete = {() => this.handleDrag()}
 				/>
+				<span className = "SliderLeftLabel">{MIN_ARRAY_SIZE}</span>
+				<span className = "SliderRightLabel">{MAX_ARRAY_SIZE}</span>				
 			</div>
 		)
 	}
