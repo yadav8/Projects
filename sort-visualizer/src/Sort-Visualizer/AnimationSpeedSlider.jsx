@@ -35,10 +35,10 @@ export default class AnimationSpeedSlider extends React.Component {
 
 
 	render() {
-		const {animation_speed} = this.state;
+		const animation_speed = this.state.animation_speed;
 		
-		const textLoc = ((animation_speed * 165)+5000) / 1000;
-		const text = (this.state.moving ? '' : animation_speed);
+		const textLoc = ((animation_speed * 165)+3000) / 1000;
+		const text = (this.state.moving ? '' : animation_speed+"ms");
 
 		return (
 				<div style = {{
@@ -47,11 +47,13 @@ export default class AnimationSpeedSlider extends React.Component {
 					 	top: `${this.props.top}px`,
 					 	width: `200px`,
 					 }}>
+					 <span className = "SliderName">Animation Speed (ms)</span>
 					<span className = "SliderValueLabel" style={{left: `${textLoc}px`,}}>{text}</span>
 					<Slider
 						value = {animation_speed}
 						min = {MIN_ANIMATION_SPEED}
 						max = {MAX_ANIMATION_SPEED}
+						step = {10}
 						onChange = {(value) => this.handleOnChange(value)}
 						onChangeStart = {() => this.handleDrag()}
 						onChangeComplete = {() => this.handleDrag()}

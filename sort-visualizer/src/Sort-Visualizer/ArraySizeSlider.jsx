@@ -34,7 +34,7 @@ export default class ArraySizeSlider extends React.Component {
 	}
 
 	render() {
-		const {array_size} = this.state;
+		const array_size = this.state.array_size;
 
 		// Formula to keep a slider value text above the slider position
 		const textLoc = ((array_size * 165 )+2500) / 500;
@@ -47,11 +47,13 @@ export default class ArraySizeSlider extends React.Component {
 				 	top: `${this.props.top}px`,
 				 	width: `200px`,
 				}}>
+				<span className = "SliderName">Array Size</span>
 				<span className = "SliderValueLabel" style={{left: `${textLoc}px`,}}>{text}</span>
 				<Slider
 					value = {array_size}
 					min = {MIN_ARRAY_SIZE}
 					max = {MAX_ARRAY_SIZE}
+					step = {5}
 					onChange = {(value) => this.handleOnChange(value)}
 					onChangeStart = {() => this.handleDrag()}
 					onChangeComplete = {() => this.handleDrag()}

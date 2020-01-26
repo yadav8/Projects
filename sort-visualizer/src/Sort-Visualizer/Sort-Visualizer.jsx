@@ -40,7 +40,7 @@ export default class SortVisualizer extends React.Component {
 		return (
 		    <div className="SortVisualizer">
 		    	<Toolbar
-		    		disable = {toolbar_disabled}
+		    		disabled = {toolbar_disabled}
 		    		sendSettings = {(s) => this.getSettings(s)}>
 		    	</Toolbar>
 		      	<ArrayContainer

@@ -17,7 +17,7 @@ html {
 .Toolbar {
 	position: absolute;
 	left: 0rem;
-	bottom: 10rem;
+	bottom: 2rem;
 }
 
 .SliderLeftLabel {
@@ -39,4 +39,12 @@ html {
 	top: -1.3rem;
 	font-size: 1.4rem;
 	color: darkgreen;
+}
+
+.SliderName {
+	position: absolute;
+	top: -4rem;
+	left: 1rem;
+	font-size: 1.8rem;
+	color: black;
 }
