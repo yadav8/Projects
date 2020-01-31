@@ -3,7 +3,7 @@ import ArrayContainer from './ArrayContainer.jsx';
 import Toolbar from './Toolbar.jsx';
 
 // Change this value for the number of bars (value) in the array.
-export const DEFAULT_ARRAY_SIZE = 100;
+export const DEFAULT_ARRAY_SIZE = 200;
 
 // Change this value for the speed of the animations.
 export const DEFAULT_ANIMATION_SPEED_MS = 10;
