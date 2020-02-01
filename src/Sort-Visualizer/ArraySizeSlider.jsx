@@ -3,7 +3,7 @@ import Slider from 'react-rangeslider';
 import 'react-rangeslider/lib/index.css';
 import './Sort-Visualizer.css';
 
-const MIN_ARRAY_SIZE = 2;
+const MIN_ARRAY_SIZE = 5;
 const MAX_ARRAY_SIZE = 500;
 
 export default class ArraySizeSlider extends React.Component {
@@ -37,18 +37,20 @@ export default class ArraySizeSlider extends React.Component {
 		const array_size = this.state.array_size;
 
 		// Formula to keep a slider value text above the slider position
-		const textLoc = ((array_size * 165 )+2500) / 500;
+		const textLoc = 0.5 + (array_size / (MAX_ARRAY_SIZE - MIN_ARRAY_SIZE))*this.props.width*0.85;
 		const text = (this.state.moving ? '' : array_size);
+
+		const fontSize = 1.4;
 
 		return (
 			<div style = {{
 				 	position: 'absolute',
-				 	left: `${this.props.left}px`,
-				 	top: `${this.props.top}px`,
-				 	width: `200px`,
+				 	left: `${this.props.left}rem`,
+				 	top: `${this.props.top}rem`,
+				 	width: `${this.props.width}rem`,
 				}}>
 				<span className = "SliderName">Array Size</span>
-				<span className = "SliderValueLabel" style={{left: `${textLoc}px`,}}>{text}</span>
+				<span className = "SliderValueLabel" style={{left: `${textLoc}rem`,}}>{text}</span>
 				<Slider
 					value = {array_size}
 					min = {MIN_ARRAY_SIZE}
@@ -58,8 +60,12 @@ export default class ArraySizeSlider extends React.Component {
 					onChangeStart = {() => this.handleDrag()}
 					onChangeComplete = {() => this.handleDrag()}
 				/>
-				<span className = "SliderLeftLabel">{MIN_ARRAY_SIZE}</span>
-				<span className = "SliderRightLabel">{MAX_ARRAY_SIZE}</span>				
+				<span className = "SliderLeftLabel"
+					style = {{fontSize: `${fontSize}rem`,}}>
+					{MIN_ARRAY_SIZE}</span>
+				<span className = "SliderRightLabel"
+					style = {{fontSize: `${fontSize}rem`, left: `${this.props.width - fontSize * 1.5}rem`,}}>
+					{MAX_ARRAY_SIZE}</span>				
 			</div>
 		)
 	}

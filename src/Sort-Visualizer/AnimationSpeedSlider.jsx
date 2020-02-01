@@ -4,7 +4,7 @@ import 'react-rangeslider/lib/index.css';
 import './Sort-Visualizer.css';
 
 const MIN_ANIMATION_SPEED = 1;
-const MAX_ANIMATION_SPEED = 1000;
+const MAX_ANIMATION_SPEED = 500;
 
 export default class AnimationSpeedSlider extends React.Component {
 	constructor(props) {
@@ -37,18 +37,20 @@ export default class AnimationSpeedSlider extends React.Component {
 	render() {
 		const animation_speed = this.state.animation_speed;
 		
-		const textLoc = ((animation_speed * 165)+3000) / 1000;
+		const textLoc = 0.5 + (animation_speed / (MAX_ANIMATION_SPEED - MIN_ANIMATION_SPEED))*this.props.width*0.85;
 		const text = (this.state.moving ? '' : animation_speed+"ms");
+
+		const fontSize = 1.4;
 
 		return (
 				<div style = {{
 					 	position: 'absolute',
-					 	left: `${this.props.left}px`,
-					 	top: `${this.props.top}px`,
-					 	width: `200px`,
+					 	left: `${this.props.left}rem`,
+					 	top: `${this.props.top}rem`,
+					 	width: `${this.props.width}rem`,
 					 }}>
 					 <span className = "SliderName">Animation Speed (ms)</span>
-					<span className = "SliderValueLabel" style={{left: `${textLoc}px`,}}>{text}</span>
+					<span className = "SliderValueLabel" style={{left: `${textLoc}rem`,}}>{text}</span>
 					<Slider
 						value = {animation_speed}
 						min = {MIN_ANIMATION_SPEED}
@@ -58,8 +60,12 @@ export default class AnimationSpeedSlider extends React.Component {
 						onChangeStart = {() => this.handleDrag()}
 						onChangeComplete = {() => this.handleDrag()}
 					/>
-					<span className = "SliderLeftLabel">{MIN_ANIMATION_SPEED}</span>
-					<span className = "SliderRightLabel">{MAX_ANIMATION_SPEED}</span>
+					<span className = "SliderLeftLabel"
+						style = {{fontSize: `${fontSize}rem`,}}>
+						{MIN_ANIMATION_SPEED}</span>
+					<span className = "SliderRightLabel"
+						style = {{fontSize: `${fontSize}rem`, left: `${this.props.width - fontSize * 1.5}rem`,}}>
+						{MAX_ANIMATION_SPEED}</span>
 				</div>
 			) 
 	}

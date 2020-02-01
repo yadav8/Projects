@@ -7,31 +7,16 @@ import getBubbleSortSequence from '../Sort-Algorithms/BubbleSort.js';
 import getMergeSortSequence from '../Sort-Algorithms/MergeSort.js';
 import getQuickSortSequence from '../Sort-Algorithms/QuickSort.js';
 
-/* ** GENERAL TODOS **
-
-- Use immutability helper to stop copying array and just updating it, during
-sequence execution.
-- Make sure this.state.array is not being mutated outside setState because of how deep cloning works.
-
-1. Heap sort
-2. Add a display for color legend when a particular sort button is pressed
-3. Disable other buttons when animation is taking place. Make disable look obvious.
-4. Add user configuration sliders etc.
-5. Prettify all buttons and sliders
-6. Edit README.md
-*/
-
-// *************************************************** //
-// TODO: Make these user-configurable
-
-let date = new Date();
 
 
 // Array min and max possible values
 export const DEFAULT_ARRAY_MIN_VALUE = 1;
 export const DEFAULT_ARRAY_MAX_VALUE = 700;
-// *************************************************** //
 
+//Arraycontainer needs to have a height which is 90% of window height
+//Need to linear interpolate array bar heights as a function of arraycontainer height and arraybar value
+//so it scales with moving window size.
+//Same with height and width of toolbar and all components
 
 
 // Array bar color constants:
@@ -46,7 +31,7 @@ export default class ArrayContainer extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.arrayContainerWidth = window.innerWidth - 300;	// Resizes to fit browser window
+		this.arrayContainerWidth = window.innerWidth * this.props.widthRatio;	// Ratio of window to be occupied by container
 		this.arraySize = this.props.settings.array_size;	// Array size variable - changes with props
 		this.arrayBarWidth = (this.arrayContainerWidth / (this.arraySize)) - .5; //Formula for array bar width
 		this.animation_speed_ms = this.props.settings.animation_speed;	// Animation speed variable - changes with props	
@@ -71,8 +56,7 @@ export default class ArrayContainer extends React.Component {
 
 
 	componentDidUpdate() {
-		//console.log(date.getTime());
-		if (date.getTime()%1===0 && this.props.settings.array_size !== this.arraySize) {
+		if (this.props.settings.array_size !== this.arraySize) {
 			this.arraySize = this.props.settings.array_size;
 			this.arrayBarWidth = (this.arrayContainerWidth / (this.arraySize)) - .5;
 			this.generateArray();
@@ -111,14 +95,13 @@ export default class ArrayContainer extends React.Component {
 		return {"id"   : i,
 		  		"value": randomIntFromInterval(DEFAULT_ARRAY_MIN_VALUE, DEFAULT_ARRAY_MAX_VALUE),
 		  		"color": DEFAULT_COLOR,
-		  		"width": this.arrayBarWidth,
 		  		"pivot": false,
 		  		"final": false};
 	}
 
 	// Handles updating Component dimensions on window resize
 	handleWindowResize() {
-		this.arrayContainerWidth = window.innerWidth - 300;
+		this.arrayContainerWidth = window.innerWidth * this.props.widthRatio;
 		this.arrayBarWidth = (this.arrayContainerWidth / (this.arraySize)) - .5;
 		this.setState({width: this.arrayContainerWidth});
 	}
@@ -133,16 +116,17 @@ export default class ArrayContainer extends React.Component {
 	render() {
 		const array = this.state.array;
 		const width = this.state.width;
+		const leftOffset = window.innerWidth * 0.205;
 
 	    return (
-	    	<div className = "ArrayContainer" style={{width: width,}}>
+	    	<div className = "ArrayContainer" style={{left: leftOffset, width: width,}}>
 		    	{array.map((arrayElement) => (
 					<ArrayBar
 						key = {arrayElement.id}
 						id = {arrayElement.id}
 						value = {arrayElement.value}
 						color = {arrayElement.color}
-						width = {arrayElement.width}
+						width = {this.arrayBarWidth}
 					/>
 			    ))}
 			    <br/>

@@ -5,7 +5,6 @@ html {
 
 .ArrayContainer {
 	position: absolute;
-	left: 22rem;
 	bottom: 2rem;
 }
 
@@ -16,7 +15,6 @@ html {
 
 .Toolbar {
 	position: absolute;
-	left: 0rem;
 	bottom: 2rem;
 }
 
@@ -24,14 +22,11 @@ html {
 	position: absolute;
 	left: 0.5rem;
 	bottom: -1rem;
-	font-size: 1.4rem;
 }
 
 .SliderRightLabel {
 	position: absolute;
-	left: 17rem;
 	bottom: -1rem;
-	font-size: 1.4rem;
 }
 
 .SliderValueLabel {
@@ -45,6 +40,6 @@ html {
 	position: absolute;
 	top: -4rem;
 	left: 1rem;
-	font-size: 1.8rem;
+	font-size: 1.6rem;
 	color: black;
 }

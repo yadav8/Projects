@@ -36,15 +36,21 @@ export default class SortVisualizer extends React.Component {
 	render() {
 		const settings = this.state.settings;
 		const toolbar_disabled = this.state.toolbar_disabled;
+		const height = window.innerHeight;
+		const width = window.innerWidth;
 
 		return (
-		    <div className="SortVisualizer">
+		    <div className="SortVisualizer" style = {{width: width, height: height, backgroundColor: 'white',}}>
 		    	<Toolbar
 		    		disabled = {toolbar_disabled}
+		    		widthRatio = {0.15}
+		    		heightRatio = {0.90}
 		    		sendSettings = {(s) => this.getSettings(s)}>
 		    	</Toolbar>
 		      	<ArrayContainer
 		      		settings = {settings}
+		      		widthRatio = {0.72}
+		      		heightRatio = {0.90}
 		      		disableToolbar = {(disabled) => this.updateToolbar(disabled)}>
 		      	</ArrayContainer>
 		    </div>      
