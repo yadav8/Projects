@@ -32,7 +32,6 @@ html {
 .SliderValueLabel {
 	position: absolute;
 	top: -1.3rem;
-	font-size: 1.4rem;
 	color: darkgreen;
 }
 
@@ -40,6 +39,5 @@ html {
 	position: absolute;
 	top: -4rem;
 	left: 1rem;
-	font-size: 1.6rem;
 	color: black;
 }

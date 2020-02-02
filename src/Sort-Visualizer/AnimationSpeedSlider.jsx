@@ -40,7 +40,9 @@ export default class AnimationSpeedSlider extends React.Component {
 		const textLoc = 0.5 + (animation_speed / (MAX_ANIMATION_SPEED - MIN_ANIMATION_SPEED))*this.props.width*0.85;
 		const text = (this.state.moving ? '' : animation_speed+"ms");
 
-		const fontSize = 1.4;
+		const fontSize_Label = 14 * this.props.width / 21.6;
+		const fontSize_Name = 16 * this.props.width / 21.6;
+		const fontSize_Value = 14 * this.props.width / 21.6;
 
 		return (
 				<div style = {{
@@ -49,8 +51,8 @@ export default class AnimationSpeedSlider extends React.Component {
 					 	top: `${this.props.top}rem`,
 					 	width: `${this.props.width}rem`,
 					 }}>
-					 <span className = "SliderName">Animation Speed (ms)</span>
-					<span className = "SliderValueLabel" style={{left: `${textLoc}rem`,}}>{text}</span>
+					 <span className = "SliderName" style={{fontSize: fontSize_Name,}}>Time Between Frames (ms)</span>
+					<span className = "SliderValueLabel" style={{left: `${textLoc}rem`, fontSize: fontSize_Value,}}>{text}</span>
 					<Slider
 						value = {animation_speed}
 						min = {MIN_ANIMATION_SPEED}
@@ -61,10 +63,10 @@ export default class AnimationSpeedSlider extends React.Component {
 						onChangeComplete = {() => this.handleDrag()}
 					/>
 					<span className = "SliderLeftLabel"
-						style = {{fontSize: `${fontSize}rem`,}}>
+						style = {{fontSize: fontSize_Label,}}>
 						{MIN_ANIMATION_SPEED}</span>
 					<span className = "SliderRightLabel"
-						style = {{fontSize: `${fontSize}rem`, left: `${this.props.width - fontSize * 1.5}rem`,}}>
+						style = {{fontSize: fontSize_Label, left: `${this.props.width - fontSize_Label * 0.15}rem`,}}>
 						{MAX_ANIMATION_SPEED}</span>
 				</div>
 			) 
