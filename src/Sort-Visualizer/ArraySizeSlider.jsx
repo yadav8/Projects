@@ -16,6 +16,7 @@ export default class ArraySizeSlider extends React.Component {
 		}
 	}
 
+	// Overwrite functionality incase I want sync-ed sliders with automatic movements
 	componentDidUpdate() {
 		if (this.props.overwrite && this.props.overwrite_val!==this.state.array_size) {
 			this.setState({array_size: this.props.overwrite_val});
@@ -40,7 +41,9 @@ export default class ArraySizeSlider extends React.Component {
 		const textLoc = 0.5 + (array_size / (MAX_ARRAY_SIZE - MIN_ARRAY_SIZE))*this.props.width*0.85;
 		const text = (this.state.moving ? '' : array_size);
 
-		const fontSize = 1.4;
+		const fontSize_Label = 14 * this.props.width / 21.6;
+		const fontSize_Name = 16 * this.props.width / 21.6;
+		const fontSize_Value = 14 * this.props.width / 21.6;
 
 		return (
 			<div style = {{
@@ -49,8 +52,8 @@ export default class ArraySizeSlider extends React.Component {
 				 	top: `${this.props.top}rem`,
 				 	width: `${this.props.width}rem`,
 				}}>
-				<span className = "SliderName">Array Size</span>
-				<span className = "SliderValueLabel" style={{left: `${textLoc}rem`,}}>{text}</span>
+				<span className = "SliderName" style={{fontSize: fontSize_Name,}}>Array Size</span>
+				<span className = "SliderValueLabel" style={{left: `${textLoc}rem`, fontSize: fontSize_Value,}}>{text}</span>
 				<Slider
 					value = {array_size}
 					min = {MIN_ARRAY_SIZE}
@@ -61,10 +64,10 @@ export default class ArraySizeSlider extends React.Component {
 					onChangeComplete = {() => this.handleDrag()}
 				/>
 				<span className = "SliderLeftLabel"
-					style = {{fontSize: `${fontSize}rem`,}}>
+					style = {{fontSize: fontSize_Label,}}>
 					{MIN_ARRAY_SIZE}</span>
 				<span className = "SliderRightLabel"
-					style = {{fontSize: `${fontSize}rem`, left: `${this.props.width - fontSize * 1.5}rem`,}}>
+					style = {{fontSize: fontSize_Label, left: `${this.props.width - fontSize_Label * 0.15}rem`,}}>
 					{MAX_ARRAY_SIZE}</span>				
 			</div>
 		)

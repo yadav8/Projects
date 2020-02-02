@@ -12,13 +12,38 @@ export default class SortVisualizer extends React.Component {
 	constructor(props) {
 		super(props);
 
+		// Visualizer dimensions
+		this.width = window.innerWidth;
+		this.height = window.innerHeight;
+
 		this.state = {
 			settings: {
 				"array_size": DEFAULT_ARRAY_SIZE,
 				"animation_speed": DEFAULT_ANIMATION_SPEED_MS
 			},
-			toolbar_disabled: false
+			toolbar_disabled: false,
+			width: this.width,
+			height: this.height,
+			generateArrayPressed: false
 		};
+	}
+
+	// Adds event listener to handle window resizing
+	componentDidMount() {
+		window.addEventListener('resize', () => this.handleWindowResize());
+	}
+
+	// Removes any added event listeners
+	componentWillUnmount() {
+		window.removeEventListener('resize', () => this.handleWindowResize());
+	}
+
+
+	// Handles updating Component dimensions on window resize
+	handleWindowResize() {
+		this.width = window.innerWidth;
+		this.height = window.innerHeight;
+		this.setState({width: this.width, height: this.height});
 	}
 
 	// Gets settings from Toolbar and sends it to ArrayContainer in the render
@@ -33,25 +58,34 @@ export default class SortVisualizer extends React.Component {
 	}
 
 
+	generateArrayPressed(isPressed) {
+		this.setState({generateArrayPressed: isPressed});
+	}
+
+
 	render() {
 		const settings = this.state.settings;
 		const toolbar_disabled = this.state.toolbar_disabled;
-		const height = window.innerHeight;
-		const width = window.innerWidth;
+		const width = this.state.width;
+		const height = this.state.height;
 
 		return (
 		    <div className="SortVisualizer" style = {{width: width, height: height, backgroundColor: 'white',}}>
 		    	<Toolbar
 		    		disabled = {toolbar_disabled}
-		    		widthRatio = {0.15}
-		    		heightRatio = {0.90}
-		    		sendSettings = {(s) => this.getSettings(s)}>
+		    		left = {0.025 * width}
+		    		width = {0.15 * width}
+		    		height = {0.90 * height}
+		    		sendSettings = {(s) => this.getSettings(s)}
+		    		generateArrayPressed = {(isPressed) => this.generateArrayPressed(isPressed)}>
 		    	</Toolbar>
 		      	<ArrayContainer
 		      		settings = {settings}
-		      		widthRatio = {0.72}
-		      		heightRatio = {0.90}
-		      		disableToolbar = {(disabled) => this.updateToolbar(disabled)}>
+		      		left = {0.205 * width}
+		      		width = {0.72 * width}
+		      		height = {0.90 * height}
+		      		disableToolbar = {(disabled) => this.updateToolbar(disabled)}
+		      		generateArrayPressed = {this.state.generateArrayPressed}>
 		      	</ArrayContainer>
 		    </div>      
   		);

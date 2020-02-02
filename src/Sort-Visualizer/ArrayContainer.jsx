@@ -11,7 +11,7 @@ import getQuickSortSequence from '../Sort-Algorithms/QuickSort.js';
 
 // Array min and max possible values
 export const DEFAULT_ARRAY_MIN_VALUE = 1;
-export const DEFAULT_ARRAY_MAX_VALUE = 700;
+export const DEFAULT_ARRAY_MAX_VALUE = 20;
 
 //Arraycontainer needs to have a height which is 90% of window height
 //Need to linear interpolate array bar heights as a function of arraycontainer height and arraybar value
@@ -31,45 +31,39 @@ export default class ArrayContainer extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.arrayContainerWidth = window.innerWidth * this.props.widthRatio;	// Ratio of window to be occupied by container
 		this.arraySize = this.props.settings.array_size;	// Array size variable - changes with props
-		this.arrayBarWidth = (this.arrayContainerWidth / (this.arraySize)) - .5; //Formula for array bar width
 		this.animation_speed_ms = this.props.settings.animation_speed;	// Animation speed variable - changes with props	
 
 		this.state = {
 		  array: [],	// Array of JSON objects  
-		  width: this.arrayContainerWidth,
+		  disableButtons: false
 		};
 	}
 
   	// New array for every reload
-  	// Adds event listener to handle window resizing
 	componentDidMount() {
 		this.generateArray();
-		window.addEventListener('resize', () => this.handleWindowResize());
-	}
-
-	// Removes any added event listeners
-	componentWillUnmount() {
-		window.removeEventListener('resize', () => this.handleWindowResize());
 	}
 
 
 	componentDidUpdate() {
 		if (this.props.settings.array_size !== this.arraySize) {
 			this.arraySize = this.props.settings.array_size;
-			this.arrayBarWidth = (this.arrayContainerWidth / (this.arraySize)) - .5;
 			this.generateArray();
 		}
 
 		this.animation_speed_ms = this.props.settings.animation_speed;
-		
+
+		if (this.props.generateArrayPressed) {
+			this.count = this.count+1;
+			console.log(this.count);
+			this.generateArray();
+		}	
 	}
 
 
 	// Generates new array
 	generateArray() {
-		//window.location.reload();
 		const array = [];
 		const width = this.arrayContainerWidth;
 		for (let i = 0; i < this.arraySize; i++) {
@@ -99,13 +93,6 @@ export default class ArrayContainer extends React.Component {
 		  		"final": false};
 	}
 
-	// Handles updating Component dimensions on window resize
-	handleWindowResize() {
-		this.arrayContainerWidth = window.innerWidth * this.props.widthRatio;
-		this.arrayBarWidth = (this.arrayContainerWidth / (this.arraySize)) - .5;
-		this.setState({width: this.arrayContainerWidth});
-	}
-
 
 	// Extracts the actual array value from this.state.array to send to Sorting Algorithms
 	getValueArray() {
@@ -115,25 +102,33 @@ export default class ArrayContainer extends React.Component {
 
 	render() {
 		const array = this.state.array;
-		const width = this.state.width;
-		const leftOffset = window.innerWidth * 0.205;
+		const width = this.props.width;
+		const height = this.props.height;
+		const leftOffset = this.props.left;
+		const arrayBarHeightScale = height / 711;
+		const arrayBarWidth = (width / this.arraySize) - .5;
+
+		console.log(height);
 
 	    return (
-	    	<div className = "ArrayContainer" style={{left: leftOffset, width: width,}}>
+	    	<div className = "ArrayContainer" style={{left: leftOffset, width: width, height: height,}}>
 		    	{array.map((arrayElement) => (
 					<ArrayBar
 						key = {arrayElement.id}
 						id = {arrayElement.id}
 						value = {arrayElement.value}
 						color = {arrayElement.color}
-						width = {this.arrayBarWidth}
+						width = {arrayBarWidth}
+						scale = {arrayBarHeightScale}
 					/>
 			    ))}
 			    <br/>
-			    <button onClick={() => this.generateArray()}>Generate new array!</button>
-			    <button onClick={() => this.bubbleSortButtonPressed()}>Bubble Sort</button>
-			    <button onClick={() => this.mergeSortButtonPressed()}>Merge Sort</button>
-			    <button onClick={() => this.quickSortButtonPressed()}>Quick Sort</button>
+			    <div style = {this.state.disableButtons ? {pointerEvents: "none", opacity: "0.5",}:{}}>
+				    <button onClick={() => this.generateArray()}>Generate new array!</button>
+				    <button onClick={() => this.bubbleSortButtonPressed()}>Bubble Sort</button>
+				    <button onClick={() => this.mergeSortButtonPressed()}>Merge Sort</button>
+				    <button onClick={() => this.quickSortButtonPressed()}>Quick Sort</button>
+				</div>
 		    </div>
 	    );
 	}
@@ -173,7 +168,12 @@ export default class ArrayContainer extends React.Component {
 		
 		// Disable the toolbar for the duration of the sort, then re-enable
 		this.props.disableToolbar(true);
-		setTimeout(() => {this.props.disableToolbar(false);}, sequence.length * this.animation_speed_ms);
+		this.setState({disableButtons: true});
+		setTimeout(() => 
+			{
+				this.props.disableToolbar(false);
+				this.setState({disableButtons: false});
+			}, sequence.length * this.animation_speed_ms);
 
 		for (let i = 0; i < sequence.length; i++) {
 			// Our sequence is an array of 'frames', where each frame looks like this:

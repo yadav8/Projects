@@ -1,9 +1,6 @@
 import React from 'react';
 import './Sort-Visualizer.css';
 
-// Scales the height of the ArrayBars by a constant amount over their array 'value'
-const VERT_SCALING_FACTOR = 1;
-
 
 // This component stores the visual representation of each element in the ArrayContainer
 
@@ -38,7 +35,8 @@ export default class ArrayBar extends React.PureComponent {
 		const value = this.props.value;
 		const color = this.props.color;
 		const width = this.props.width;
-		const height = value * VERT_SCALING_FACTOR;
+		const vert_scaling_factor = this.props.scale;
+		const height = value * vert_scaling_factor;
 
 		return (
 			<div
