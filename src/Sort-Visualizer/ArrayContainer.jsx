@@ -11,7 +11,7 @@ import getQuickSortSequence from '../Sort-Algorithms/QuickSort.js';
 
 // Array min and max possible values
 export const DEFAULT_ARRAY_MIN_VALUE = 1;
-export const DEFAULT_ARRAY_MAX_VALUE = 700;
+export const DEFAULT_ARRAY_MAX_VALUE = 50;
 
 //Arraycontainer needs to have a height which is 90% of window height
 //Need to linear interpolate array bar heights as a function of arraycontainer height and arraybar value
@@ -117,6 +117,7 @@ export default class ArrayContainer extends React.Component {
 		const array = this.state.array;
 		const width = this.state.width;
 		const leftOffset = window.innerWidth * 0.205;
+		//const height = this.props.height;
 
 	    return (
 	    	<div className = "ArrayContainer" style={{left: leftOffset, width: width,}}>
