@@ -74,13 +74,8 @@ export default class SortVisualizer extends React.Component {
 		    	</Toolbar>
 		      	<ArrayContainer
 		      		settings = {settings}
-<<<<<<< HEAD
-		      		widthRatio = {0.72}
-		      		heightRatio = {0.90}
-=======
 		      		left = {0.205 * width}
 		      		width = {0.72 * width}
->>>>>>> master
 		      		height = {0.90 * height}
 		      		disableToolbar = {(disabled) => this.updateToolbar(disabled)}>
 		      	</ArrayContainer>
