@@ -51,14 +51,6 @@ export default class Toolbar extends React.Component {
 	}
 
 
-	generateArrayPressed(isPressed) {
-		this.props.generateArrayPressed(isPressed);
-	}
-
-	ahh(){
-		console.log("here");
-	}
-
 	render() {
 		const array_size = this.state.settings.array_size;
 		const animation_speed = this.state.settings.animation_speed;
@@ -89,12 +81,6 @@ export default class Toolbar extends React.Component {
 						top = {18}
 						width = {width * 0.090}>
 					</AnimationSpeedSlider>
-					<div style = {{position: 'absolute', top: height/2,}}>
-						<button onMouseDown={() => this.generateArrayPressed(true)} onMouseUp={() => this.generateArrayPressed(false)}>Generate new array</button>
-						<button onClick={() => this.bubbleSortButtonPressed()}>Bubble Sort</button>
-						<button onClick={() => this.mergeSortButtonPressed()}>Merge Sort</button>
-						<button onClick={() => this.quickSortButtonPressed()}>Quick Sort</button>
-					</div>
 				</div>
 			)
 	}

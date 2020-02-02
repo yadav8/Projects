@@ -35,17 +35,21 @@ export default class ArrayBar extends React.PureComponent {
 		const value = this.props.value;
 		const color = this.props.color;
 		const width = this.props.width;
+		const left = this.props.left;
 		const vert_scaling_factor = this.props.scale;
 		const height = value * vert_scaling_factor;
+		const bottom = 25;
 
 		return (
 			<div
 				className = "ArrayBar"
 				style = {{
+					position: 'absolute',
 					backgroundColor: color,
 					width: width,
 		        	height: `${height}px`,
-
+		        	bottom: `${bottom}px`,
+		        	left: `${left}px`,
 				}}>
 			</div>
 		);

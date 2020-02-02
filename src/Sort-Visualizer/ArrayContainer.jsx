@@ -11,7 +11,7 @@ import getQuickSortSequence from '../Sort-Algorithms/QuickSort.js';
 
 // Array min and max possible values
 export const DEFAULT_ARRAY_MIN_VALUE = 1;
-export const DEFAULT_ARRAY_MAX_VALUE = 20;
+export const DEFAULT_ARRAY_MAX_VALUE = 700;
 
 //Arraycontainer needs to have a height which is 90% of window height
 //Need to linear interpolate array bar heights as a function of arraycontainer height and arraybar value
@@ -105,10 +105,8 @@ export default class ArrayContainer extends React.Component {
 		const width = this.props.width;
 		const height = this.props.height;
 		const leftOffset = this.props.left;
-		const arrayBarHeightScale = height / 711;
+		const arrayBarHeightScale = (height - 25) / 711;
 		const arrayBarWidth = (width / this.arraySize) - .5;
-
-		console.log(height);
 
 	    return (
 	    	<div className = "ArrayContainer" style={{left: leftOffset, width: width, height: height,}}>
@@ -120,10 +118,11 @@ export default class ArrayContainer extends React.Component {
 						color = {arrayElement.color}
 						width = {arrayBarWidth}
 						scale = {arrayBarHeightScale}
+						left = {arrayElement.id * (arrayBarWidth + 0.5)}
 					/>
 			    ))}
 			    <br/>
-			    <div style = {this.state.disableButtons ? {pointerEvents: "none", opacity: "0.5",}:{}}>
+			    <div style = {this.state.disableButtons ? {position: "absolute", bottom: `0px`, left: `0px`, pointerEvents: "none", opacity: "0.5",}:{position: "absolute", bottom: `0px`, left: `0px`}}>
 				    <button onClick={() => this.generateArray()}>Generate new array!</button>
 				    <button onClick={() => this.bubbleSortButtonPressed()}>Bubble Sort</button>
 				    <button onClick={() => this.mergeSortButtonPressed()}>Merge Sort</button>

@@ -23,8 +23,7 @@ export default class SortVisualizer extends React.Component {
 			},
 			toolbar_disabled: false,
 			width: this.width,
-			height: this.height,
-			generateArrayPressed: false
+			height: this.height
 		};
 	}
 
@@ -58,11 +57,6 @@ export default class SortVisualizer extends React.Component {
 	}
 
 
-	generateArrayPressed(isPressed) {
-		this.setState({generateArrayPressed: isPressed});
-	}
-
-
 	render() {
 		const settings = this.state.settings;
 		const toolbar_disabled = this.state.toolbar_disabled;
@@ -76,16 +70,14 @@ export default class SortVisualizer extends React.Component {
 		    		left = {0.025 * width}
 		    		width = {0.15 * width}
 		    		height = {0.90 * height}
-		    		sendSettings = {(s) => this.getSettings(s)}
-		    		generateArrayPressed = {(isPressed) => this.generateArrayPressed(isPressed)}>
+		    		sendSettings = {(s) => this.getSettings(s)}>
 		    	</Toolbar>
 		      	<ArrayContainer
 		      		settings = {settings}
 		      		left = {0.205 * width}
 		      		width = {0.72 * width}
 		      		height = {0.90 * height}
-		      		disableToolbar = {(disabled) => this.updateToolbar(disabled)}
-		      		generateArrayPressed = {this.state.generateArrayPressed}>
+		      		disableToolbar = {(disabled) => this.updateToolbar(disabled)}>
 		      	</ArrayContainer>
 		    </div>      
   		);
