@@ -1,6 +1,8 @@
 # Sort Visualizer
 
-This project was created by Sumit Yadav using ReactJS in an effort to gain experience in developing a React App, while solidifying the concepts underlying some popular sorting algorithms.
+This project was created by Sumit Yadav using `ReactJS` in an effort to gain experience in developing a React App, while solidifying the concepts underlying some popular sorting algorithms.
+
+This app is deployed on [sorter.sumitpyadav.com](https://sorter.sumitpyadav.com) using AWS Amplify.
 
 ## Sorting algorithms
 
@@ -20,16 +22,17 @@ The algorithm records whenever two elements are being compared, swapped, when an
 
 ![Quick Sort](pics/quick_sort_60.png)
 
+> This image shows a quick sort mid-sequence
 
-Quick sort works by choosing a Pivot element in the array, and moving all elements lesser than the pivot to its left (in an ascending sort), and all elements greater to its right. <br />It then recursively calls Quick sort onto the partitioned left and right arrays - until the entire array is sorted.
+Quick sort works by choosing a Pivot element in the array, and moving all elements lesser than the pivot to its left (in an ascending sort), and all elements greater to its right. It then recursively calls Quick sort onto the partitioned left and right arrays - until the entire array is sorted.
 
-As we partition the array and choose a pivot index, we push a ["pivot", index, _ ] 
-'frame' into the recorded sequence. Then as we compare two elements on either side of the pivot, we push a <br /> ["compare", index1, index2] frame into the sequence. Then, if the algorithm decides that they need to be swapped, we push a ["swap", index1, index2] frame.
+As we partition the array and choose a pivot index, we push a `["pivot", <index>,] `
+'frame' into the recorded sequence. Then as we compare two elements on either side of the pivot, we push a `["compare", <index1>, <index2>]` frame into the sequence. Then, if the algorithm decides that they need to be swapped, we push a `["swap", <index1>, <index2>]` frame.
 
-The algorithms recognize ahead of time when an element has reached its final position. In the case of quick sort - we know that by definition of the algorithm, when a pivot element finishes moving <br /> respective elements to its left and right arrays - then the pivot has reached its final position in the sorted array. Thus we push a ["final", index1, _ ] frame to the sequence.
+The algorithms recognize ahead of time when an element has reached its final position. In the case of quick sort - we know that by definition of the algorithm, when a pivot element finishes moving respective elements to its left and right arrays - then the pivot has reached its final position in the sorted array. Thus we push a `["final", <index1>,]` frame to the sequence.
 
-Our ArrayContainer gets this sequence from the various sort algorithms, and then displays the frames in order, with speed based on a defined FRAMERATE constant.<br /> Thus creating an animation of the sort which just took place. 
-All operations, such as compare, swap and final have their own unique colors to help identify the sorting sequence.
+Our `ArrayContainer` gets this sequence from the various sort algorithms, and then displays the frames in order, with speed based on a defined FRAMERATE constant.<br><br> Thus creating an animation of the sort which just took place. 
+All operations, such as `compare`, `swap` and `final` have their own unique colors to help identify the sorting sequence.
 
 ## Future goals
 
