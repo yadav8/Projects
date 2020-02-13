@@ -9,6 +9,7 @@ This project was created by Sumit Yadav using ReactJS in an effort to gain exper
 3. Quick Sort
 4. Heap Sort (In development)
 
+
 ## How does it work?
 
 Although the various sorting algorithms presented their own challenges, they all work with the same basic principle of taking 'snapshots' of every step/frame in the algorithm's sequence.
@@ -16,6 +17,9 @@ Although the various sorting algorithms presented their own challenges, they all
 The algorithm records whenever two elements are being compared, swapped, when an element reaches its final position and some other such operations which vary with each algorithm.
 
 ### For example: Quick Sort
+
+![Quick Sort](pics/quick_sort_60.png)
+
 
 Quick sort works by choosing a Pivot element in the array, and moving all elements lesser than the pivot to its left (in an ascending sort), and all elements greater to its right. <br />It then recursively calls Quick sort onto the partitioned left and right arrays - until the entire array is sorted.
 
@@ -31,7 +35,6 @@ All operations, such as compare, swap and final have their own unique colors to 
 
 Since I had a lot of fun gradually adding features to this visualizer, I have a list of things I want to implement in the near future:
 
-1. Add user configurable inputs and sliders for Array size, min and max values, and animation framerate.
-2. Add a color legend for the current sorting algorithm being performed.
-3. Add a musical output where each index of the array corresponds to a different musical note, and each color/operation being performed on the array index modifies that note.<br />The idea is that you should be able to 'hear' the array get sorted.
-4. Add more sorting algorithms! Show the performance of an algorithm and allow a user to compare it to another algorithm with the same array.
+1. Add a color legend for the current sorting algorithm being performed.
+2. Add a musical output where each index of the array corresponds to a different musical note, and each color/operation being performed on the array index modifies that note.<br />The idea is that you should be able to 'hear' the array get sorted.
+3. Add more sorting algorithms! Show the performance of an algorithm and allow a user to compare it to another algorithm with the same array.

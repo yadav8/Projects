@@ -188,13 +188,6 @@ export default class ArrayContainer extends React.Component {
 			// Calls appropriate sequence function logic for the upcoming frame to be rendered
 			if (sequence_function === "compare") {
 				this.sequenceCompare(array_copy, array_i, array_j, i, revertToDefault);
-				//FOR FUNCTIONAL SETSTATE:
-				// setTimeout(() => {
-				// 	this.setState(sequenceCompare1(array_copy, array_i, array_j, i, revertToDefault));
-				// }, i * this.animation_speed_ms);
-				// setTimeout(() => {
-				// 	this.setState(sequenceCompare2(array_copy, array_i, array_j, i, revertToDefault));
-				// }, (i+1) * this.animation_speed_ms);
 			}
 			else if (sequence_function === "swap") {		
 				this.sequenceSwap(array_copy, array_i, array_j, i, revertToDefault);				
@@ -397,5 +390,13 @@ TEST CODE BELOW FOR EXPERIMENTAL ALTERNATIVE IMPLEMENTATIONS:
 // 		return({array: array});
 // 	//}, (frameNumber+1) * this.animation_speed_ms);
 // }
+
+//FOR FUNCTIONAL SETSTATE, in execute_sequence():
+// setTimeout(() => {
+// 	this.setState(sequenceCompare1(array_copy, array_i, array_j, i, revertToDefault));
+// }, i * this.animation_speed_ms);
+// setTimeout(() => {
+// 	this.setState(sequenceCompare2(array_copy, array_i, array_j, i, revertToDefault));
+// }, (i+1) * this.animation_speed_ms);
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
