@@ -13,11 +13,6 @@ import getQuickSortSequence from '../Sort-Algorithms/QuickSort.js';
 export const DEFAULT_ARRAY_MIN_VALUE = 1;
 export const DEFAULT_ARRAY_MAX_VALUE = 700;
 
-//Arraycontainer needs to have a height which is 90% of window height
-//Need to linear interpolate array bar heights as a function of arraycontainer height and arraybar value
-//so it scales with moving window size.
-//Same with height and width of toolbar and all components
-
 
 // Array bar color constants:
 const DEFAULT_COLOR = 'pink';			// Used by all sort functions
@@ -161,7 +156,6 @@ export default class ArrayContainer extends React.Component {
 	// Bubble Sort: compare, swap, final
 	// Merge Sort: compare, overwrite, final
 	// Quick Sort: compare, swap, pivot, final
-	// Heap Sort: compare, swap, final (TODO)
 	executeSequence(sequence) {
 		let array_copy = [...this.state.array];
 		
